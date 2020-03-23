@@ -17,11 +17,11 @@
 ##  Screenshots
 | HOME | AppLock |
 |:-:|:-:|
-| ![home](/screen/1.png?raw=true "home") | ![profile](/screen/2.png?raw=true "AppLock") |
+| ![home](/fastlane/metadata/android/en-US/images/phoneScreenshots/1.png?raw=true "home") | ![profile](/fastlane/metadata/android/en-US/images/phoneScreenshots/screen/2.png?raw=true "AppLock") |
 
 | AppLock 2 |Settings|
 |:-:|:-:|
-| ![home](/screen/3.png?raw=true "applock") | ![profile](/screen/4.png?raw=true "Settings") |
+| ![home](/fastlane/metadata/android/en-US/images/phoneScreenshots/3.png?raw=true "applock") | ![profile](/fastlane/metadata/android/en-US/images/phoneScreenshots/4.png?raw=true "Settings") |
 
 
 #### This app is forked from [github.com/lizixian18/AppLock](https://github.com/lizixian18/AppLock)
