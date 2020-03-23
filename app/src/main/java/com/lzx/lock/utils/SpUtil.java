@@ -9,12 +9,8 @@ import android.support.annotation.Nullable;
 
 public class SpUtil {
     private volatile static SpUtil mInstance;
-
-    private Context mContext;
     private SharedPreferences mPref;
 
-    private boolean a;
-    private String b;
 
 
     private SpUtil() {
@@ -31,13 +27,11 @@ public class SpUtil {
         return mInstance;
     }
 
-    public void init(Context context) {
-        if (mContext == null) {
-            mContext = context;
-        }
+    public SpUtil init(Context context) {
         if (mPref == null) {
-            mPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+            mPref = PreferenceManager.getDefaultSharedPreferences(context);
         }
+        return this;
     }
 
     public void putString(String key, String value) {

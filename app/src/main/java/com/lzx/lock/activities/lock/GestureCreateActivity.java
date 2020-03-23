@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lzx.lock.R;
 import com.lzx.lock.base.BaseActivity;
@@ -14,7 +15,6 @@ import com.lzx.lock.mvp.contract.GestureCreateContract;
 import com.lzx.lock.mvp.p.GestureCreatePresenter;
 import com.lzx.lock.utils.LockPatternUtils;
 import com.lzx.lock.utils.SystemBarHelper;
-import com.lzx.lock.utils.ToastUtil;
 import com.lzx.lock.widget.LockPatternView;
 import com.lzx.lock.widget.LockPatternViewPattern;
 
@@ -111,7 +111,7 @@ public class GestureCreateActivity extends BaseActivity implements View.OnClickL
     @Override
     public void updateLockTip(String text, boolean isToast) {
         if (isToast) {
-            ToastUtil.showToast(text);
+            Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
         } else {
             mLockTip.setText(text);
         }

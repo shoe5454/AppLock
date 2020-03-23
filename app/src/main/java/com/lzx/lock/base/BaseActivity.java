@@ -24,7 +24,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LockApplication.getInstance().doForCreate(this);
+        LockApplication.addActivity(this);
         setContentView(getLayoutId());
 
         initViews(savedInstanceState);
@@ -67,10 +67,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    public void hiddenActionBar() {
-        getSupportActionBar().hide();
-    }
-
     protected abstract void initData();
 
     protected abstract void initAction();
@@ -78,10 +74,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LockApplication.getInstance().doForFinish(this);
+        LockApplication.finishActivity(this);
     }
 
-    public final void clear() {
-        super.finish();
-    }
+
 }

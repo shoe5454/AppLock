@@ -21,10 +21,7 @@ import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.Display;
 import android.view.View;
-import android.widget.RelativeLayout;
 
 import com.lzx.lock.base.BaseActivity;
 
@@ -36,12 +33,7 @@ import java.util.List;
  */
 
 public class LockUtil {
-    /**
-     *
-     *
-     * @param context
-     * @return
-     */
+
     public static boolean isStatAccessPermissionSet(@NonNull Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             try {
@@ -59,11 +51,27 @@ public class LockUtil {
         }
     }
 
-    /**
-     * 
-     *
-     * @return
-     */
+    public static boolean isAccessibilitySettingsOn(Context context) {
+        int accessibilityEnabled = 0;
+        try {
+            accessibilityEnabled = Settings.Secure.getInt(context.getContentResolver(),
+                    android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
+        } catch (Settings.SettingNotFoundException ignored) {
+
+        }
+
+        if (accessibilityEnabled == 1) {
+            String services = Settings.Secure.getString(context.getContentResolver(),
+                    Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
+            if (services != null) {
+                return services.toLowerCase().contains(context.getPackageName().toLowerCase());
+            }
+        }
+        return false;
+    }
+
+
+
     public static boolean isNoOption(@NonNull Context context) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             PackageManager packageManager = context.getPackageManager();
@@ -74,8 +82,7 @@ public class LockUtil {
         return false;
     }
 
-    /**
-     */
+
     private static final String ENABLED_NOTIFICATION_LISTENERS = "enabled_notification_listeners";
 
     public static boolean isNotificationSettingOn(Context mContext) {

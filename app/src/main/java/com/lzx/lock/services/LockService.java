@@ -37,20 +37,25 @@ public class LockService extends IntentService {
     public static final String UNLOCK_ACTION = "UNLOCK_ACTION";
     public static final String LOCK_SERVICE_LASTTIME = "LOCK_SERVICE_LASTTIME";
     public static final String LOCK_SERVICE_LASTAPP = "LOCK_SERVICE_LASTAPP";
+
     private static final String TAG = "LockService";
+
     public static boolean isActionLock = false;
     public boolean threadIsTerminate = false;
     @Nullable
+
     public String savePkgName;
     UsageStatsManager sUsageStatsManager;
+
     Timer timer = new Timer();
-    //private boolean isLockTypeAccessibility;
+
     private long lastUnlockTimeSeconds = 0;
     private String lastUnlockPackageName = "";
+
     private boolean lockState;
+
     private ServiceReceiver mServiceReceiver;
     private CommLockInfoManager mLockInfoManager;
-
 
     @Nullable
     private ActivityManager activityManager;
@@ -69,7 +74,9 @@ public class LockService extends IntentService {
     public void onCreate() {
         super.onCreate();
         lockState = SpUtil.getInstance().getBoolean(AppConstants.LOCK_STATE);
+
         mLockInfoManager = new CommLockInfoManager(this);
+
         activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
 
         mServiceReceiver = new ServiceReceiver();
@@ -92,11 +99,15 @@ public class LockService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        runForever();
+        if (!SpUtil.getInstance().getBoolean(AppConstants.LOCK_TYPE_ACCESSIBILITY))
+            runForever();
+        else {
+            // Log.d(TAG, "onHandleIntent: old lock model");
+
+        }
     }
 
     private void runForever() {
-
         while (threadIsTerminate) {
             String packageName = getLauncherTopApp(LockService.this, activityManager);
             if (lockState && !TextUtils.isEmpty(packageName) && !inWhiteList(packageName)) {
@@ -158,22 +169,24 @@ public class LockService extends IntentService {
                 }
                 if (mLockInfoManager.isLockedPackageName(packageName)) {
                     passwordLock(packageName);
+
                     continue;
                 }
             }
+
             try {
-                Thread.sleep(210);
+                Thread.sleep(150);
             } catch (Exception ignore) {
             }
         }
     }
 
     private boolean inWhiteList(String packageName) {
-        return packageName.equals(AppConstants.APP_PACKAGE_NAME);
+        return packageName.equals(AppConstants.THIS_APP_PACKAGE_NAME);
     }
 
     public String getLauncherTopApp(@NonNull Context context, @NonNull ActivityManager activityManager) {
-        //isLockTypeAccessibility = SpUtil.getInstance().getBoolean(AppConstants.LOCK_TYPE, false);
+        //isLockTypeAccessibility = SpUtil.getInstance().getBoolean(AppConstants.LOCK_TYPE_ACCESSIBILITY, false);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             List<ActivityManager.RunningTaskInfo> appTasks = activityManager.getRunningTasks(1);
             if (null != appTasks && !appTasks.isEmpty()) {
@@ -212,9 +225,9 @@ public class LockService extends IntentService {
     }
 
     private void passwordLock(String packageName) {
-        LockApplication.getInstance().clearAllActivity();
-        Intent intent = new Intent(this, GestureUnlockActivity.class);
+        LockApplication.clearAllActivity();
 
+        Intent intent = new Intent(this, GestureUnlockActivity.class);
         intent.putExtra(AppConstants.LOCK_PACKAGE_NAME, packageName);
         intent.putExtra(AppConstants.LOCK_FROM, AppConstants.LOCK_FROM_FINISH);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -232,7 +245,6 @@ public class LockService extends IntentService {
         lockState = SpUtil.getInstance().getBoolean(AppConstants.LOCK_STATE);
         if (lockState) {
             Intent intent = new Intent(this, LockRestarterBroadcastReceiver.class);
-            intent.putExtra("type", "lockservice");
             sendBroadcast(intent);
         }
         unregisterReceiver(mServiceReceiver);

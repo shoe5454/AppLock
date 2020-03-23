@@ -9,7 +9,7 @@ import com.lzx.lock.BuildConfig;
 public class AppConstants {
 
     //intent constant
-    public static final String APP_PACKAGE_NAME = BuildConfig.APPLICATION_ID;
+    public static final String THIS_APP_PACKAGE_NAME = BuildConfig.APPLICATION_ID;
     public static final String LOCK_PWD = "lock_pwd";
     public static final String LOCK_PACKAGE_NAME = "lock_package_name";
     public static final String LOCK_FROM = "lock_from";
@@ -26,7 +26,7 @@ public class AppConstants {
     public static final String LOCK_IS_INIT_FAVITER = "lock_is_init_faviter";//boolean
     public static final String LOCK_IS_INIT_DB = "lock_is_init_db";//boolean
     public static final String LOCK_IS_HIDE_LINE = "lock_is_hide_line";//boolean
-    public static final String LOCK_IS_FIRST_LOCK = "is_lock"; //boolean
+    public static final String LOCK_IF_FIRST_LOCK_NOT_CHOOSEN = "is_lock"; //boolean
     public static final String LOCK_AUTO_SCREEN = "lock_auto_screen";//boolean
     public static final String LOCK_AUTO_SCREEN_TIME = "lock_auto_screen_time"; //boolean
     public static final String LOCK_CURR_MILLISECONDS = "lock_curr_milliseconds";//long
@@ -35,5 +35,6 @@ public class AppConstants {
     public static final String LOCK_LAST_LOAD_PKG_NAME = "last_load_package_name";//string
     public static final String LOCK_AUTO_RECORD_PIC = "AutoRecordPic";//boolean
     public static final String PATTERN_VIBRATION="pattern_vibration";
-    // public static final String LOCK_TYPE = "lock_type";//boolean ACCESSIBILITY OR USAGES STATE
+    public static final String LOCK_TYPE_ACCESSIBILITY = "lock_type";//boolean ACCESSIBILITY OR USAGES STATE
 }
+

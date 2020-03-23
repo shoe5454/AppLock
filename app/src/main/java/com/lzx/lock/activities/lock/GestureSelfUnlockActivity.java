@@ -7,11 +7,11 @@ import android.view.TextureView;
 import android.widget.RelativeLayout;
 
 import com.lzx.lock.R;
+import com.lzx.lock.activities.main.MainActivity;
+import com.lzx.lock.activities.setting.LockSettingActivity;
 import com.lzx.lock.base.AppConstants;
 import com.lzx.lock.base.BaseActivity;
 import com.lzx.lock.db.CommLockInfoManager;
-import com.lzx.lock.activities.main.MainActivity;
-import com.lzx.lock.activities.setting.LockSettingActivity;
 import com.lzx.lock.utils.LockPatternUtils;
 import com.lzx.lock.utils.SpUtil;
 import com.lzx.lock.utils.SystemBarHelper;

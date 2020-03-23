@@ -9,14 +9,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lzx.lock.R;
+import com.lzx.lock.activities.main.MainActivity;
 import com.lzx.lock.base.AppConstants;
 import com.lzx.lock.base.BaseActivity;
 import com.lzx.lock.model.LockStage;
-import com.lzx.lock.activities.main.MainActivity;
 import com.lzx.lock.mvp.contract.GestureCreateContract;
 import com.lzx.lock.mvp.p.GestureCreatePresenter;
 import com.lzx.lock.services.BackgroundManager;
-import com.lzx.lock.services.LockService;
 import com.lzx.lock.utils.LockPatternUtils;
 import com.lzx.lock.utils.SpUtil;
 import com.lzx.lock.utils.SystemBarHelper;
@@ -104,11 +103,14 @@ public class CreatePwdActivity extends BaseActivity implements View.OnClickListe
 
     private void gotoLockMainActivity() {
         SpUtil.getInstance().putBoolean(AppConstants.LOCK_STATE, true);
-        BackgroundManager.getInstance().init(this).startService(LockService.class);
-        SpUtil.getInstance().putBoolean(AppConstants.LOCK_IS_FIRST_LOCK, false);
+
+        BackgroundManager.startBackgroundLockService(this);
+
+        SpUtil.getInstance().putBoolean(AppConstants.LOCK_IF_FIRST_LOCK_NOT_CHOOSEN, false);
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
+
 
     @Override
     public void updateUiStage(LockStage stage) {

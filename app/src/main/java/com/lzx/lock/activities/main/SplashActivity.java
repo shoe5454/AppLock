@@ -7,34 +7,35 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.lzx.lock.R;
-import com.lzx.lock.base.AppConstants;
-import com.lzx.lock.base.BaseActivity;
 import com.lzx.lock.activities.lock.GestureSelfUnlockActivity;
 import com.lzx.lock.activities.pwd.CreatePwdActivity;
+import com.lzx.lock.base.AppConstants;
+import com.lzx.lock.base.BaseActivity;
 import com.lzx.lock.services.BackgroundManager;
 import com.lzx.lock.services.LoadAppListService;
-import com.lzx.lock.services.LockService;
 import com.lzx.lock.utils.AppUtils;
 import com.lzx.lock.utils.LockUtil;
 import com.lzx.lock.utils.SpUtil;
-import com.lzx.lock.utils.ToastUtil;
 import com.lzx.lock.widget.DialogPermission;
+import com.lzx.lock.widget.DialogSelection;
 
 /**
  * Created by xian on 2017/2/17.
  */
 
 public class SplashActivity extends BaseActivity {
-    private static final int RESULT_ACTION_USAGE_ACCESS_SETTINGS = 1;
-    private static final int RESULT_ACTION_ACCESSIBILITY_SETTINGS = 3;
+
+    private static final int RESULT_ACTION_USAGE_ACCESS_SETTINGS = 101;
+    private static final int RESULT_ACTION_ACCESSIBILITY_SETTINGS = 103;
 
     private ImageView mImgSplash;
+
     @Nullable
-    private ObjectAnimator animator;
+    private ObjectAnimator mAnimator;
 
     @Override
     public int getLayoutId() {
@@ -49,38 +50,56 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        //startService(new Intent(this, LoadAppListService.class));
-        BackgroundManager.getInstance().init(this).startService(LoadAppListService.class);
 
-        //start lock services if  everything is already  setup
-        if (SpUtil.getInstance().getBoolean(AppConstants.LOCK_STATE, false)) {
-            BackgroundManager.getInstance().init(this).startService(LockService.class);
-        }
+        //loads apps in background...
+        BackgroundManager.startService(this, LoadAppListService.class);
 
-        animator = ObjectAnimator.ofFloat(mImgSplash, "alpha", 0.5f, 1);
-        animator.setDuration(1500);
-        animator.start();
-        animator.addListener(new AnimatorListenerAdapter() {
+        mAnimator = ObjectAnimator.ofFloat(mImgSplash, "alpha", 0.5f, 1);
+        mAnimator.setDuration(1000);
+        mAnimator.start();
+        mAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                boolean isFirstLock = SpUtil.getInstance().getBoolean(AppConstants.LOCK_IS_FIRST_LOCK, true);
-                if (isFirstLock) {
-                    showDialog();
-                } else {
-                    Intent intent = new Intent(SplashActivity.this, GestureSelfUnlockActivity.class);
-                    intent.putExtra(AppConstants.LOCK_PACKAGE_NAME, AppConstants.APP_PACKAGE_NAME);
-                    intent.putExtra(AppConstants.LOCK_FROM, AppConstants.LOCK_FROM_LOCK_MAIN_ACITVITY);
-                    startActivity(intent);
-                    finish();
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                }
+                initAppLock();
             }
         });
     }
 
-    private void showDialog() {
-        // If you do not have access to view usage rights and the phone exists to view usage this interface
+    private void initAppLock() {
+        if (SpUtil.getInstance().getBoolean(AppConstants.LOCK_IF_FIRST_LOCK_NOT_CHOOSEN, true)) {
+            showFirstSelectionDialog();
+        } else {
+            BackgroundManager.startBackgroundLockService(this);
+            Intent intent = new Intent(SplashActivity.this, GestureSelfUnlockActivity.class);
+            intent.putExtra(AppConstants.LOCK_PACKAGE_NAME, AppConstants.THIS_APP_PACKAGE_NAME);
+            intent.putExtra(AppConstants.LOCK_FROM, AppConstants.LOCK_FROM_LOCK_MAIN_ACITVITY);
+            startActivity(intent);
+            finish();
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        }
+    }
+
+    private void showFirstSelectionDialog() {
+        DialogSelection dialogSelection = new DialogSelection(SplashActivity.this);
+        dialogSelection.setOnAccessibilityClickListener(new DialogSelection.OnClickListener() {
+            @Override
+            public void onClick() {
+                SpUtil.getInstance().putBoolean(AppConstants.LOCK_TYPE_ACCESSIBILITY, true);
+                showAccessibilityDialog();
+            }
+        });
+        dialogSelection.setOnUsageStatsClickListener(new DialogSelection.OnClickListener() {
+            @Override
+            public void onClick() {
+                SpUtil.getInstance().putBoolean(AppConstants.LOCK_TYPE_ACCESSIBILITY, false);
+                showUsageStatsDialog();
+            }
+        });
+        dialogSelection.show();
+    }
+
+    private void showUsageStatsDialog() {
         if (!LockUtil.isStatAccessPermissionSet(SplashActivity.this) && LockUtil.isNoOption(SplashActivity.this)) {
             DialogPermission dialog = new DialogPermission(SplashActivity.this);
             dialog.show();
@@ -88,8 +107,7 @@ public class SplashActivity extends BaseActivity {
                 @Override
                 public void onClick() {
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                        Intent intent = null;
-                        intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+                        Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
                         startActivityForResult(intent, RESULT_ACTION_USAGE_ACCESS_SETTINGS);
                     }
                 }
@@ -97,64 +115,57 @@ public class SplashActivity extends BaseActivity {
         } else {
             gotoCreatePwdActivity();
         }
-
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RESULT_ACTION_USAGE_ACCESS_SETTINGS) {
-            if (LockUtil.isStatAccessPermissionSet(SplashActivity.this)) {
-                gotoCreatePwdActivity();
-            } else {
-                ToastUtil.showToast("Permission denied");
-                finish();
-            }
-        }
-        if (requestCode == RESULT_ACTION_ACCESSIBILITY_SETTINGS) {
+    private void showAccessibilityDialog() {
+        if (!LockUtil.isAccessibilitySettingsOn(getApplicationContext())) {
+            Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivityForResult(intent, RESULT_ACTION_ACCESSIBILITY_SETTINGS);
+        } else {
             gotoCreatePwdActivity();
         }
     }
 
-    public boolean isAccessibilityEnabled() {
-        int accessibilityEnabled = 0;
-        final String ACCESSIBILITY_SERVICE = "io.github.subhamtyagi.privacyapplock/com.lzx.lock.service.LockAccessibilityService";
-        try {
-            accessibilityEnabled = Settings.Secure.getInt(this.getContentResolver(), android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
-        } catch (Settings.SettingNotFoundException e) {
-            //setting not found so your phone is not supported
-        }
-        TextUtils.SimpleStringSplitter mStringColonSplitter = new TextUtils.SimpleStringSplitter(':');
-        if (accessibilityEnabled == 1) {
-            String settingValue = Settings.Secure.getString(getContentResolver(), Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
-            if (settingValue != null) {
-                mStringColonSplitter.setString(settingValue);
-                while (mStringColonSplitter.hasNext()) {
-                    String accessabilityService = mStringColonSplitter.next();
-                    if (accessabilityService.equalsIgnoreCase(ACCESSIBILITY_SERVICE)) {
-                        return true;
-                    }
-                }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RESULT_ACTION_USAGE_ACCESS_SETTINGS) {
+            if (LockUtil.isStatAccessPermissionSet(SplashActivity.this)) {
+                gotoCreatePwdActivity();
+            } else {
+                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        } else if (requestCode == RESULT_ACTION_ACCESSIBILITY_SETTINGS) {
+            if (LockUtil.isAccessibilitySettingsOn(getApplicationContext()))
+                gotoCreatePwdActivity();
+            else {
+                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
+                finish();
             }
         }
-        return false;
+
     }
 
     private void gotoCreatePwdActivity() {
-        Intent intent2 = new Intent(SplashActivity.this, CreatePwdActivity.class);
-        startActivity(intent2);
+        BackgroundManager.startBackgroundLockService(this);
+
+        Intent intent = new Intent(SplashActivity.this, CreatePwdActivity.class);
+        startActivity(intent);
         finish();
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
     @Override
     protected void initAction() {
-
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        animator = null;
+        mAnimator = null;
     }
 }

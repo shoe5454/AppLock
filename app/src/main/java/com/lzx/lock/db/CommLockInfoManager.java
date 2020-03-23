@@ -28,7 +28,7 @@ import static org.litepal.crud.DataSupport.where;
 public class CommLockInfoManager {
 
     private PackageManager mPackageManager;
-    private Context mContext;
+
     @NonNull
     private Comparator commLockInfoComparator = new Comparator() {
 
@@ -80,7 +80,7 @@ public class CommLockInfoManager {
                     && !rightCommLockInfo.isFaviterApp()
                     && rightCommLockInfo.isLocked()) {
                 return 1;
-            }else if (!leftCommLockInfo.isFaviterApp()
+            } else if (!leftCommLockInfo.isFaviterApp()
                     && leftCommLockInfo.isLocked()
                     && rightCommLockInfo.isFaviterApp()
                     && rightCommLockInfo.isLocked()) {
@@ -114,8 +114,17 @@ public class CommLockInfoManager {
     };
 
 
+    private static CommLockInfoManager mInstance;
+
+    public static CommLockInfoManager getInstance(Context context) {
+        if (mInstance == null) {
+            mInstance = new CommLockInfoManager(context);
+            return mInstance;
+        } else return mInstance;
+
+    }
+
     public CommLockInfoManager(Context mContext) {
-        this.mContext = mContext;
         mPackageManager = mContext.getPackageManager();
     }
 
@@ -140,7 +149,7 @@ public class CommLockInfoManager {
             ApplicationInfo appInfo = mPackageManager.getApplicationInfo(commLockInfo.getPackageName(), PackageManager.GET_UNINSTALLED_PACKAGES);
             String appName = mPackageManager.getApplicationLabel(appInfo).toString();
 
-            if (!commLockInfo.getPackageName().equals(AppConstants.APP_PACKAGE_NAME) ) {
+            if (!commLockInfo.getPackageName().equals(AppConstants.THIS_APP_PACKAGE_NAME)) {
                 if (isfaviterApp) {
                     commLockInfo.setLocked(true);
                 } else {

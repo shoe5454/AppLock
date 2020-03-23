@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.CheckBox;
@@ -21,10 +22,10 @@ import com.lzx.lock.base.AppConstants;
 import com.lzx.lock.base.BaseActivity;
 import com.lzx.lock.model.LockAutoTime;
 import com.lzx.lock.services.BackgroundManager;
-import com.lzx.lock.services.LockService;
+import com.lzx.lock.services.LockAccessibilityService;
+import com.lzx.lock.utils.LockUtil;
 import com.lzx.lock.utils.SpUtil;
 import com.lzx.lock.utils.SystemBarHelper;
-import com.lzx.lock.utils.ToastUtil;
 import com.lzx.lock.widget.SelectLockTimeDialog;
 
 
@@ -46,11 +47,12 @@ public class LockSettingActivity extends BaseActivity implements View.OnClickLis
 
     private TextView tvAbout,
             tvLockTime,
-            tvChangePwd;
+            tvChangePwd,
+            mLockTypeSwitch;
 
     private LockSettingReceiver mLockSettingReceiver;
     private SelectLockTimeDialog dialog;
-    private RelativeLayout mTopLayout;
+    private RelativeLayout mTopLayout, mLockType;
 
     @Override
     public int getLayoutId() {
@@ -59,15 +61,21 @@ public class LockSettingActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
-        cbLockSwitch=findViewById(R.id.checkbox_app_lock_on_off);
-        cbLockScreen=findViewById(R.id.checkbox_lock_screen_switch_on_phone_lock);
-        cbIntruderSelfie=findViewById(R.id.checkbox_intruder_selfie);
-        cbHidePattern=findViewById(R.id.checkbox_show_hide_pattern);
-        cbVibration=findViewById(R.id.checkbox_vibrate);
+        cbLockSwitch = findViewById(R.id.checkbox_app_lock_on_off);
+        cbLockScreen = findViewById(R.id.checkbox_lock_screen_switch_on_phone_lock);
+        cbIntruderSelfie = findViewById(R.id.checkbox_intruder_selfie);
+        cbHidePattern = findViewById(R.id.checkbox_show_hide_pattern);
+        cbVibration = findViewById(R.id.checkbox_vibrate);
 
         tvChangePwd = findViewById(R.id.btn_change_pwd);
+
         tvLockTime = findViewById(R.id.lock_time);
+
         tvAbout = findViewById(R.id.about_me);
+
+
+        mLockType = findViewById(R.id.lock_type);
+        mLockTypeSwitch = findViewById(R.id.lock_type_switch);
 
         //
         mTopLayout = findViewById(R.id.top_layout);
@@ -80,28 +88,34 @@ public class LockSettingActivity extends BaseActivity implements View.OnClickLis
         IntentFilter filter = new IntentFilter();
         filter.addAction(ON_ITEM_CLICK_ACTION);
         registerReceiver(mLockSettingReceiver, filter);
+
         dialog = new SelectLockTimeDialog(this, "");
+
         dialog.setOnDismissListener(this);
         boolean isLockOpen = SpUtil.getInstance().getBoolean(AppConstants.LOCK_STATE);
         cbLockSwitch.setChecked(isLockOpen);
 
+
         boolean isLockAutoScreen = SpUtil.getInstance().getBoolean(AppConstants.LOCK_AUTO_SCREEN, false);
         cbLockScreen.setChecked(isLockAutoScreen);
 
+        boolean isLockAccessibilityOn = SpUtil.getInstance().getBoolean(AppConstants.LOCK_TYPE_ACCESSIBILITY, false);
+        mLockTypeSwitch.setText(isLockAccessibilityOn ? "Accessibility" : "Usages Stats");
+
         boolean isTakePic = SpUtil.getInstance().getBoolean(AppConstants.LOCK_AUTO_RECORD_PIC, false);
         cbIntruderSelfie.setChecked(isTakePic);
+
         tvLockTime.setText(SpUtil.getInstance().getString(AppConstants.LOCK_APART_TITLE, "immediately"));
     }
 
     @Override
     protected void initAction() {
-
         cbLockSwitch.setOnCheckedChangeListener(this);
         cbLockScreen.setOnCheckedChangeListener(this);
         cbIntruderSelfie.setOnCheckedChangeListener(this);
         cbHidePattern.setOnCheckedChangeListener(this);
         cbVibration.setOnCheckedChangeListener(this);
-
+        mLockType.setOnClickListener(this);
         tvLockTime.setOnClickListener(this);
         tvChangePwd.setOnClickListener(this);
         tvAbout.setOnClickListener(this);
@@ -125,6 +139,27 @@ public class LockSettingActivity extends BaseActivity implements View.OnClickLis
                 dialog.setTitle(title);
                 dialog.show();
                 break;
+            case R.id.lock_type: {
+
+                //TODO:  check
+                boolean isLockTypeAccessibility = SpUtil.getInstance().getBoolean(AppConstants.LOCK_TYPE_ACCESSIBILITY, false);
+                if (!isLockTypeAccessibility) {
+                    if (!LockUtil.isAccessibilitySettingsOn(getApplicationContext())) {
+                        Intent intentForAccessbility = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                        intentForAccessbility.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        getApplicationContext().startActivity(intentForAccessbility);
+                    } else {
+                        BackgroundManager.startService(this, LockAccessibilityService.class);
+                        SpUtil.getInstance().putBoolean(AppConstants.LOCK_TYPE_ACCESSIBILITY, true);
+                        mLockTypeSwitch.setText(getString(R.string.accessibility));
+                    }
+                } else {
+                    SpUtil.getInstance().putBoolean(AppConstants.LOCK_TYPE_ACCESSIBILITY, false);
+                    BackgroundManager.stopService(this, LockAccessibilityService.class);
+                    mLockTypeSwitch.setText(getString(R.string.usage_stats));
+                }
+                break;
+            }
         }
     }
 
@@ -133,16 +168,12 @@ public class LockSettingActivity extends BaseActivity implements View.OnClickLis
     public void onCheckedChanged(CompoundButton buttonView, boolean b) {
         switch (buttonView.getId()) {
             case R.id.checkbox_app_lock_on_off:
+                //TODO: check
                 SpUtil.getInstance().putBoolean(AppConstants.LOCK_STATE, b);
                 if (b) {
-                    BackgroundManager.getInstance().init(LockSettingActivity.this).stopService(LockService.class);
-                    BackgroundManager.getInstance().init(LockSettingActivity.this).startService(LockService.class);
-
-                    BackgroundManager.getInstance().init(LockSettingActivity.this).startAlarmManager();
-
+                    BackgroundManager.startBackgroundLockService(this);
                 } else {
-                    BackgroundManager.getInstance().init(LockSettingActivity.this).stopService(LockService.class);
-                    BackgroundManager.getInstance().init(LockSettingActivity.this).stopAlarmManager();
+                    BackgroundManager.stopBackgroundLockService(this);
                 }
                 break;
             case R.id.checkbox_lock_screen_switch_on_phone_lock:
@@ -156,7 +187,7 @@ public class LockSettingActivity extends BaseActivity implements View.OnClickLis
                 SpUtil.getInstance().putBoolean(AppConstants.LOCK_IS_HIDE_LINE, b);
                 break;
             case R.id.checkbox_vibrate:
-                SpUtil.getInstance().putBoolean(AppConstants.PATTERN_VIBRATION,b);
+                SpUtil.getInstance().putBoolean(AppConstants.PATTERN_VIBRATION, b);
                 Toast.makeText(LockSettingActivity.this, "Not implemented yet", Toast.LENGTH_SHORT).show();
                 break;
 
@@ -170,7 +201,7 @@ public class LockSettingActivity extends BaseActivity implements View.OnClickLis
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_CHANGE_PWD:
-                    ToastUtil.showToast("Password reset succeeded");
+                    Toast.makeText(this, "Password reset succeeded", Toast.LENGTH_SHORT).show();
                     break;
             }
         }

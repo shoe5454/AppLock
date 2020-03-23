@@ -1,7 +1,6 @@
 package com.lzx.lock.activities.main;
 
 import android.annotation.SuppressLint;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,21 +16,19 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lzx.lock.R;
+import com.lzx.lock.activities.setting.LockSettingActivity;
 import com.lzx.lock.base.AppConstants;
 import com.lzx.lock.base.BaseActivity;
 import com.lzx.lock.model.CommLockInfo;
-import com.lzx.lock.activities.setting.LockSettingActivity;
 import com.lzx.lock.mvp.contract.LockMainContract;
 import com.lzx.lock.mvp.p.LockMainPresenter;
 import com.lzx.lock.services.BackgroundManager;
-import com.lzx.lock.services.LockService;
 import com.lzx.lock.utils.SystemBarHelper;
 import com.lzx.lock.widget.DialogSearch;
 
@@ -45,17 +42,14 @@ import java.util.List;
 public class MainActivity extends BaseActivity implements LockMainContract.View, View.OnClickListener {
 
     private static final int RESULT_ACTION_IGNORE_BATTERY_OPTIMIZATION = 351;
-    private static final String TAG="MainActivity";
-    private RelativeLayout mTopLayout;
+
+    private static final String TAG = "MainActivity";
     private ImageView mBtnSetting;
     private TextView mEditSearch;
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
-    private CommentPagerAdapter mPagerAdapter;
     private LockMainPresenter mLockMainPresenter;
     private DialogSearch mDialogSearch;
-    private List<String> titles;
-    private List<Fragment> fragmentList;
 
     @Override
     public int getLayoutId() {
@@ -68,12 +62,13 @@ public class MainActivity extends BaseActivity implements LockMainContract.View,
         mEditSearch = findViewById(R.id.edit_search);
         mTabLayout = findViewById(R.id.tab_layout);
         mViewPager = findViewById(R.id.view_pager);
-        mTopLayout = findViewById(R.id.top_layout);
+
+        RelativeLayout mTopLayout = findViewById(R.id.top_layout);
         mTopLayout.setPadding(0, SystemBarHelper.getStatusBarHeight(this), 0, 0);
 
         mLockMainPresenter = new LockMainPresenter(this, this);
         mLockMainPresenter.loadAppInfo(this);
-        //
+
     }
 
     @Override
@@ -82,17 +77,15 @@ public class MainActivity extends BaseActivity implements LockMainContract.View,
 
         PowerManager powerManager = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (powerManager != null && !powerManager.isIgnoringBatteryOptimizations(AppConstants.APP_PACKAGE_NAME)) {
+            if (powerManager != null && !powerManager.isIgnoringBatteryOptimizations(AppConstants.THIS_APP_PACKAGE_NAME)) {
                 @SuppressLint("BatteryLife")
                 Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                intent.setData(Uri.parse("package:" + AppConstants.APP_PACKAGE_NAME));
+                intent.setData(Uri.parse("package:" + AppConstants.THIS_APP_PACKAGE_NAME));
                 startActivity(intent);
             }
         }
-        if(!BackgroundManager.getInstance().init(this).isServiceRunning(LockService.class)){
-            BackgroundManager.getInstance().init(this).startService(LockService.class);
-        }
-        BackgroundManager.getInstance().init(this).startAlarmManager();
+
+        BackgroundManager.startBackgroundLockService(this);
     }
 
 
@@ -112,9 +105,9 @@ public class MainActivity extends BaseActivity implements LockMainContract.View,
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RESULT_ACTION_IGNORE_BATTERY_OPTIMIZATION) {
-           // do nothing::  make this required
-        }
+        /*if (requestCode == RESULT_ACTION_IGNORE_BATTERY_OPTIMIZATION) {
+            // do nothing::
+        }*/
     }
 
     @Override
@@ -128,17 +121,18 @@ public class MainActivity extends BaseActivity implements LockMainContract.View,
                 userNum++;
             }
         }
-        titles = new ArrayList<>();
+        List<String> titles = new ArrayList<>();
+        //TODO: strings
         titles.add("System Apps" + " (" + sysNum + ")");
         titles.add("User Apps" + " (" + userNum + ")");
 
         SysAppFragment sysAppFragment = SysAppFragment.newInstance(list);
         UserAppFragment userAppFragment = UserAppFragment.newInstance(list);
 
-        fragmentList = new ArrayList<>();
+        List<Fragment> fragmentList = new ArrayList<>();
         fragmentList.add(sysAppFragment);
         fragmentList.add(userAppFragment);
-        mPagerAdapter = new CommentPagerAdapter(getSupportFragmentManager(), fragmentList, titles);
+        CommentPagerAdapter mPagerAdapter = new CommentPagerAdapter(getSupportFragmentManager(), fragmentList, titles);
         mViewPager.setAdapter(mPagerAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
     }
@@ -157,8 +151,8 @@ public class MainActivity extends BaseActivity implements LockMainContract.View,
 
     public class CommentPagerAdapter extends FragmentStatePagerAdapter {
 
-        private List<Fragment> fragmentList ;
-        private List<String> titles ;
+        private List<Fragment> fragmentList;
+        private List<String> titles;
 
 
         public CommentPagerAdapter(FragmentManager fm, List<Fragment> fragmentList, List<String> titles) {

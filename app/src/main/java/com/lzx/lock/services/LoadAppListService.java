@@ -27,7 +27,7 @@ import java.util.List;
 public class LoadAppListService extends IntentService {
 
     public static final String ACTION_START_LOAD_APP = "io.github.subhamtyagi.privacyapplock.service.action.LOADAPP";
-    long time = 0;
+
     private PackageManager mPackageManager;
     @Nullable
     private CommLockInfoManager mLockInfoManager;
@@ -40,16 +40,15 @@ public class LoadAppListService extends IntentService {
     public void onCreate() {
         super.onCreate();
         mPackageManager = getPackageManager();
-        mLockInfoManager = new CommLockInfoManager(this);
+        mLockInfoManager = CommLockInfoManager.getInstance(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationUtil.createNotification(this,"App Lock","App lock Services running in background");
+            //TODO: strings
+            NotificationUtil.createNotification(this, "App Lock", "App lock Services running in background");
         }
     }
 
     @Override
     protected void onHandleIntent(Intent handleIntent) {
-
-        time = System.currentTimeMillis();
         boolean isInitFaviter = SpUtil.getInstance().getBoolean(AppConstants.LOCK_IS_INIT_FAVITER, false);
         boolean isInitDb = SpUtil.getInstance().getBoolean(AppConstants.LOCK_IS_INIT_DB, false);
         if (!isInitFaviter) {
@@ -70,7 +69,7 @@ public class LoadAppListService extends IntentService {
             }
 
             for (ResolveInfo resolveInfo : resolveInfos) {
-                if (!resolveInfo.activityInfo.packageName.equals(AppConstants.APP_PACKAGE_NAME)) {
+                if (!resolveInfo.activityInfo.packageName.equals(AppConstants.THIS_APP_PACKAGE_NAME)) {
                     appList.add(resolveInfo);
                 }
             }
@@ -104,7 +103,6 @@ public class LoadAppListService extends IntentService {
                         commlist.add(info);
                     }
                 }
-
                 if (commlist.size() != 0)
                     mLockInfoManager.deleteCommLockInfoTable(commlist);
             }
@@ -118,7 +116,6 @@ public class LoadAppListService extends IntentService {
                 e.printStackTrace();
             }
         }
-        // Log.i("onHandleIntent", "time consuming = " + (System.currentTimeMillis() - time));
     }
 
     @Override
@@ -139,14 +136,14 @@ public class LoadAppListService extends IntentService {
         packageList.add("com.android.email");
         packageList.add("com.android.vending");
         //TODO:
-       // packageList.add("com.android.settings");
+        packageList.add("com.android.settings");
         packageList.add("com.android.dialer");
         packageList.add("com.android.camera");
         //......
 
         //google apps
         packageList.add("com.google.android.apps.photos");
-        packageList.add("com.google.android.gm");
+        packageList.add("com.google.android.gmail");
         packageList.add("com.google.android.youtube");
         packageList.add("com.google.android.apps.tachyon");//duo
 
