@@ -1,6 +1,6 @@
 package com.lzx.lock.utils;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.lzx.lock.model.CommLockInfo;
 

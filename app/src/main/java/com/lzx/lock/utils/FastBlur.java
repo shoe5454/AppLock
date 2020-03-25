@@ -17,7 +17,8 @@
 package com.lzx.lock.utils;
 
 import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 /**
  * 高斯模糊类

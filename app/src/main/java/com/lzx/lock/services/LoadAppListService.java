@@ -5,7 +5,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Build;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
 
 import com.lzx.lock.base.AppConstants;
 import com.lzx.lock.db.CommLockInfoManager;

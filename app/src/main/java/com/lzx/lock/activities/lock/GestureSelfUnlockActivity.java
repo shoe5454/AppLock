@@ -2,9 +2,10 @@ package com.lzx.lock.activities.lock;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.TextureView;
 import android.widget.RelativeLayout;
+
+import androidx.annotation.NonNull;
 
 import com.lzx.lock.R;
 import com.lzx.lock.activities.main.MainActivity;

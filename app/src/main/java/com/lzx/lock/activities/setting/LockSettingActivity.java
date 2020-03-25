@@ -7,13 +7,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.lzx.lock.R;
 import com.lzx.lock.activities.about.AboutMeActivity;
@@ -149,7 +150,8 @@ public class LockSettingActivity extends BaseActivity implements View.OnClickLis
                         intentForAccessbility.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         getApplicationContext().startActivity(intentForAccessbility);
                     } else {
-                        BackgroundManager.startService(this, LockAccessibilityService.class);
+                        // TODO: changed ..
+                        // BackgroundManager.startService(this, LockAccessibilityService.class);
                         SpUtil.getInstance().putBoolean(AppConstants.LOCK_TYPE_ACCESSIBILITY, true);
                         mLockTypeSwitch.setText(getString(R.string.accessibility));
                     }

@@ -1,8 +1,9 @@
 package com.lzx.lock.utils;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
+
+import androidx.annotation.NonNull;
 
 /**
  * Created by xian on 2017/2/17.

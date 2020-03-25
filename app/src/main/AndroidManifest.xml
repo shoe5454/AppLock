@@ -5,8 +5,9 @@
 
     <application
         android:name=".LockApplication"
-        android:allowBackup="true"
+
         android:excludeFromRecents="true"
+
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:manageSpaceActivity=".activities.main.SplashActivity"
@@ -18,8 +19,7 @@
         <activity
             android:name=".activities.main.SplashActivity"
             android:excludeFromRecents="true"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,13 +30,11 @@
         <activity
             android:name=".activities.pwd.CreatePwdActivity"
             android:excludeFromRecents="true"
-            android:label="Create Password"
-            android:screenOrientation="portrait" />
+            android:label="Create Password" />
         <activity
             android:name=".activities.lock.GestureSelfUnlockActivity"
             android:excludeFromRecents="true"
-            android:label="Unlock"
-            android:screenOrientation="portrait" />
+            android:label="Unlock" />
         <activity
 
             android:name=".activities.lock.GestureUnlockActivity"
@@ -44,27 +42,23 @@
             android:label=""
             android:launchMode="singleTask"
             android:noHistory="true"
-            android:screenOrientation="portrait"
+
             android:theme="@style/unlock_activity_style" />
         <activity
             android:name=".activities.setting.LockSettingActivity"
             android:excludeFromRecents="true"
-            android:label="Settings"
-            android:screenOrientation="portrait" />
+            android:label="Settings" />
         <activity
             android:name=".activities.lock.GestureCreateActivity"
             android:excludeFromRecents="true"
-            android:label="Create a pattern lock"
-            android:screenOrientation="portrait" />
+            android:label="Create a pattern lock" />
         <activity
 
             android:name=".activities.about.AboutMeActivity"
-            android:label="About me"
-            android:screenOrientation="portrait" />
+            android:label="About me" />
         <activity
             android:name=".activities.main.MainActivity"
-            android:excludeFromRecents="true"
-            android:screenOrientation="portrait" />
+            android:excludeFromRecents="true" />
 
         <receiver
             android:name=".receiver.LockRestarterBroadcastReceiver"
@@ -86,6 +80,8 @@
 
         <service
             android:name=".services.LockAccessibilityService"
+            android:enabled="true"
+            android:exported="false"
             android:label="@string/accessibility_service_name"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
@@ -94,7 +90,7 @@
 
             <meta-data
                 android:name="android.accessibilityservice"
-                android:resource="@xml/accessibilityservice" />
+                android:resource="@xml/accessibilityservice_configs" />
         </service>
 
 
@@ -103,6 +99,7 @@
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
+
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <!-- <uses-permission android:name="android.permission.CAMERA"/> -->

@@ -6,7 +6,9 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
+import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import com.lzx.lock.base.AppConstants;
 import com.lzx.lock.receiver.LockRestarterBroadcastReceiver;
@@ -34,12 +36,15 @@ public class BackgroundManager {
                 startForegroundServices(context, serviceClass);
             } else {
                 context.startService(new Intent(context, serviceClass));
+
             }
+        } else {
+            Log.d(TAG, "startService: service is alrady running: " + serviceClass.getSimpleName());
         }
     }
 
     public static boolean isBackgroundServiceRunning(Context context) {
-        if (SpUtil.getInstance().getBoolean(AppConstants.LOCK_STATE, false)) {
+        if (SpUtil.getInstance().getBoolean(AppConstants.LOCK_STATE, true)) {
             if (SpUtil.getInstance().getBoolean(AppConstants.LOCK_TYPE_ACCESSIBILITY)) {
                 return isServiceRunning(context, LockAccessibilityService.class);
             } else {
@@ -56,7 +61,7 @@ public class BackgroundManager {
 
     private static void startAlarmManager(Context context) {
         Intent intent = new Intent(context, LockRestarterBroadcastReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 95374, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 451, intent, 0);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + period, pendingIntent);
 
@@ -64,7 +69,7 @@ public class BackgroundManager {
 
     private static void stopAlarmManager(Context context) {
         Intent intent = new Intent(context, LockRestarterBroadcastReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 9574, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 451, intent, 0);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
     }
@@ -78,14 +83,19 @@ public class BackgroundManager {
     }
 
 
+    private static final String TAG = "BackgroundManager";
+
     public static void startBackgroundLockService(Context context) {
-        startAlarmManager(context);
-        if (SpUtil.getInstance().getBoolean(AppConstants.LOCK_STATE, false)) {
+        if (SpUtil.getInstance().getBoolean(AppConstants.LOCK_STATE, true)) {
             if (SpUtil.getInstance().getBoolean(AppConstants.LOCK_TYPE_ACCESSIBILITY)) {
-                BackgroundManager.startService(context, LockAccessibilityService.class);
+                Log.d(TAG, "startBackgroundLockService: running accessibillity service");
+                // BackgroundManager.startService(context, LockAccessibilityService.class);
             } else {
+                Log.d(TAG, "startBackgroundLockService: runing lock service");
                 BackgroundManager.startService(context, LockService.class);
             }
+        } else {
+            Log.d(TAG, "startBackgroundLockService: lock state is false");
         }
     }
 

@@ -5,11 +5,12 @@ import android.animation.AnimatorSet;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+
+import androidx.annotation.NonNull;
 
 import com.lzx.lock.R;
 

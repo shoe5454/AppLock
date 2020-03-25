@@ -1,16 +1,12 @@
 package com.lzx.lock.activities.fingerprint;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
-import android.widget.ImageView;
-import android.widget.TextView;
+
+import androidx.annotation.RequiresApi;
 
 import com.lzx.lock.R;
-import com.lzx.lock.activities.main.MainActivity;
 
 @RequiresApi(api = Build.VERSION_CODES.M)
 public class FingerprintActivity extends Activity {

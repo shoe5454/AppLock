@@ -6,9 +6,11 @@ import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import com.lzx.lock.R;
 import com.lzx.lock.activities.lock.GestureSelfUnlockActivity;
@@ -31,6 +33,7 @@ public class SplashActivity extends BaseActivity {
 
     private static final int RESULT_ACTION_USAGE_ACCESS_SETTINGS = 101;
     private static final int RESULT_ACTION_ACCESSIBILITY_SETTINGS = 103;
+    public static final String TAG = "SplashActivity";
 
     private ImageView mImgSplash;
 
@@ -54,6 +57,7 @@ public class SplashActivity extends BaseActivity {
         //loads apps in background...
         BackgroundManager.startService(this, LoadAppListService.class);
 
+
         mAnimator = ObjectAnimator.ofFloat(mImgSplash, "alpha", 0.5f, 1);
         mAnimator.setDuration(1000);
         mAnimator.start();
@@ -70,6 +74,7 @@ public class SplashActivity extends BaseActivity {
         if (SpUtil.getInstance().getBoolean(AppConstants.LOCK_IF_FIRST_LOCK_NOT_CHOOSEN, true)) {
             showFirstSelectionDialog();
         } else {
+
             BackgroundManager.startBackgroundLockService(this);
             Intent intent = new Intent(SplashActivity.this, GestureSelfUnlockActivity.class);
             intent.putExtra(AppConstants.LOCK_PACKAGE_NAME, AppConstants.THIS_APP_PACKAGE_NAME);
@@ -81,6 +86,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void showFirstSelectionDialog() {
+        SpUtil.getInstance().putBoolean(AppConstants.LOCK_STATE, true);
         DialogSelection dialogSelection = new DialogSelection(SplashActivity.this);
         dialogSelection.setOnAccessibilityClickListener(new DialogSelection.OnClickListener() {
             @Override
@@ -119,8 +125,8 @@ public class SplashActivity extends BaseActivity {
 
     private void showAccessibilityDialog() {
         if (!LockUtil.isAccessibilitySettingsOn(getApplicationContext())) {
+            //startActivity(new Intent("android.settings.ACCESSIBILITY_SETTINGS"));
             Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivityForResult(intent, RESULT_ACTION_ACCESSIBILITY_SETTINGS);
         } else {
             gotoCreatePwdActivity();
@@ -140,8 +146,10 @@ public class SplashActivity extends BaseActivity {
                 finish();
             }
         } else if (requestCode == RESULT_ACTION_ACCESSIBILITY_SETTINGS) {
-            if (LockUtil.isAccessibilitySettingsOn(getApplicationContext()))
+            if (LockUtil.isAccessibilitySettingsOn(getApplicationContext())) {
+                Log.d(TAG, "onActivityResult: accessiblity settings on result code== " + resultCode);
                 gotoCreatePwdActivity();
+            }
             else {
                 Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
                 finish();

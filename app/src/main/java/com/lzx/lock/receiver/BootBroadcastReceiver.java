@@ -3,7 +3,8 @@ package com.lzx.lock.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 import com.lzx.lock.base.AppConstants;
 import com.lzx.lock.services.BackgroundManager;

@@ -3,8 +3,6 @@ package com.lzx.lock.adapters;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +10,12 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.lzx.lock.R;
-import com.lzx.lock.model.CommLockInfo;
 import com.lzx.lock.db.CommLockInfoManager;
+import com.lzx.lock.model.CommLockInfo;
 
 import java.util.ArrayList;
 import java.util.List;

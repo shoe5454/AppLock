@@ -4,11 +4,12 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 import com.lzx.lock.base.AppConstants;
-import com.lzx.lock.model.CommLockInfo;
 import com.lzx.lock.db.CommLockInfoManager;
+import com.lzx.lock.model.CommLockInfo;
 import com.lzx.lock.mvp.contract.MainContract;
 import com.lzx.lock.utils.SpUtil;
 

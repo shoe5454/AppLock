@@ -9,7 +9,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.annotation.RequiresApi;
+
+import androidx.annotation.RequiresApi;
 
 import com.lzx.lock.R;
 import com.lzx.lock.activities.main.MainActivity;

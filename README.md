@@ -17,7 +17,7 @@
 ##  Screenshots
 | HOME | AppLock |
 |:-:|:-:|
-| ![home](/fastlane/metadata/android/en-US/images/phoneScreenshots/1.png?raw=true "home") | ![profile](/fastlane/metadata/android/en-US/images/phoneScreenshots/screen/2.png?raw=true "AppLock") |
+| ![home](/fastlane/metadata/android/en-US/images/phoneScreenshots/1.png?raw=true "home") | ![profile](/fastlane/metadata/android/en-US/images/phoneScreenshots/2.png?raw=true "AppLock") |
 
 | AppLock 2 |Settings|
 |:-:|:-:|
@@ -34,7 +34,8 @@ If you want to make friends with me, You can give me a Email and follow me。
 #### License
 ```
 Copyright 2017 L_Xian   
-Copyright 2018 Shubham Tyagi
+Copyright 2018,2020 Shubham Tyagi
+
 
 Licensed under the Apache License, Version 2.0 (the "License");  
 you may not use this file except in compliance with the License.  

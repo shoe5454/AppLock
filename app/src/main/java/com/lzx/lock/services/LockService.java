@@ -3,6 +3,7 @@ package com.lzx.lock.services;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.usage.UsageEvents;
 import android.app.usage.UsageStatsManager;
@@ -10,16 +11,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.SystemClock;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 
-import com.lzx.lock.LockApplication;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+
 import com.lzx.lock.activities.lock.GestureUnlockActivity;
 import com.lzx.lock.base.AppConstants;
 import com.lzx.lock.db.CommLockInfoManager;
@@ -27,7 +28,6 @@ import com.lzx.lock.receiver.LockRestarterBroadcastReceiver;
 import com.lzx.lock.utils.NotificationUtil;
 import com.lzx.lock.utils.SpUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 
@@ -44,7 +44,7 @@ public class LockService extends IntentService {
     public boolean threadIsTerminate = false;
     @Nullable
 
-    public String savePkgName;
+    public String savePre;
     UsageStatsManager sUsageStatsManager;
 
     Timer timer = new Timer();
@@ -94,90 +94,42 @@ public class LockService extends IntentService {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationUtil.createNotification(this, "App Lock", "App Lock running in background");
         }
+        notification();
 
+    }
+
+    private void notification() {
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext());
+        mBuilder.setContentText("Trivia Hack most accurate answer")
+                .setContentTitle("Tap to remove overlay screen")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setOngoing(true).setAutoCancel(true)
+                .setSmallIcon(android.R.drawable.ic_notification_clear_all);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(1234, mBuilder.build());
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        if (!SpUtil.getInstance().getBoolean(AppConstants.LOCK_TYPE_ACCESSIBILITY))
-            runForever();
-        else {
-            // Log.d(TAG, "onHandleIntent: old lock model");
-
-        }
+        runForever();
     }
 
     private void runForever() {
         while (threadIsTerminate) {
             String packageName = getLauncherTopApp(LockService.this, activityManager);
             if (lockState && !TextUtils.isEmpty(packageName) && !inWhiteList(packageName)) {
-                boolean isLockOffScreenTime = SpUtil.getInstance().getBoolean(AppConstants.LOCK_AUTO_SCREEN_TIME, false);
-                boolean isLockOffScreen = SpUtil.getInstance().getBoolean(AppConstants.LOCK_AUTO_SCREEN, false);
-                savePkgName = SpUtil.getInstance().getString(AppConstants.LOCK_LAST_LOAD_PKG_NAME, "");
-
-                if (isLockOffScreenTime && !isLockOffScreen) {
-                    long time = SpUtil.getInstance().getLong(AppConstants.LOCK_CURR_MILLISECONDS, 0);
-                    long leaverTime = SpUtil.getInstance().getLong(AppConstants.LOCK_APART_MILLISECONDS, 0);
-                    if (!TextUtils.isEmpty(savePkgName) && !TextUtils.isEmpty(packageName) && !savePkgName.equals(packageName)) {
-                        if (getHomes().contains(packageName) || packageName.contains("launcher")) {
-                            boolean isSetUnLock = mLockInfoManager.isSetUnLock(savePkgName);
-                            if (!isSetUnLock) {
-                                if (System.currentTimeMillis() - time > leaverTime) {
-                                    mLockInfoManager.lockCommApplication(savePkgName);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (isLockOffScreenTime && isLockOffScreen) {
-                    long time = SpUtil.getInstance().getLong(AppConstants.LOCK_CURR_MILLISECONDS, 0);
-                    long leaverTime = SpUtil.getInstance().getLong(AppConstants.LOCK_APART_MILLISECONDS, 0);
-                    if (!TextUtils.isEmpty(savePkgName) && !TextUtils.isEmpty(packageName) && !savePkgName.equals(packageName)) {
-                        if (getHomes().contains(packageName) || packageName.contains("launcher")) {
-                            boolean isSetUnLock = mLockInfoManager.isSetUnLock(savePkgName);
-                            if (!isSetUnLock) {
-                                if (System.currentTimeMillis() - time > leaverTime) {
-                                    mLockInfoManager.lockCommApplication(savePkgName);
-                                }
-                            }
-                        }
-                    }
-                }
-
-
-                if (!isLockOffScreenTime && isLockOffScreen && !TextUtils.isEmpty(savePkgName) && !TextUtils.isEmpty(packageName)) {
-                    if (!savePkgName.equals(packageName)) {
-                        isActionLock = false;
-                        if (getHomes().contains(packageName) || packageName.contains("launcher")) {
-                            boolean isSetUnLock = mLockInfoManager.isSetUnLock(savePkgName);
-                            if (!isSetUnLock) {
-                                mLockInfoManager.lockCommApplication(savePkgName);
-                            }
-                        }
-                    } else {
-                        isActionLock = true;
-                    }
-                }
-                if (!isLockOffScreenTime && !isLockOffScreen && !TextUtils.isEmpty(savePkgName) && !TextUtils.isEmpty(packageName) && !savePkgName.equals(packageName)) {
-                    if (getHomes().contains(packageName) || packageName.contains("launcher")) {
-                        boolean isSetUnLock = mLockInfoManager.isSetUnLock(savePkgName);
-                        if (!isSetUnLock) {
-                            mLockInfoManager.lockCommApplication(savePkgName);
-                        }
-                    }
-                }
                 if (mLockInfoManager.isLockedPackageName(packageName)) {
+                    Log.d(TAG, "runForever: app is  locked:  " + packageName);
                     passwordLock(packageName);
-
-                    continue;
+                    //continue;
                 }
             }
-
             try {
-                Thread.sleep(150);
+                Thread.sleep(300);
             } catch (Exception ignore) {
             }
+
         }
     }
 
@@ -186,7 +138,7 @@ public class LockService extends IntentService {
     }
 
     public String getLauncherTopApp(@NonNull Context context, @NonNull ActivityManager activityManager) {
-        //isLockTypeAccessibility = SpUtil.getInstance().getBoolean(AppConstants.LOCK_TYPE_ACCESSIBILITY, false);
+
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             List<ActivityManager.RunningTaskInfo> appTasks = activityManager.getRunningTasks(1);
             if (null != appTasks && !appTasks.isEmpty()) {
@@ -194,7 +146,7 @@ public class LockService extends IntentService {
             }
         } else {
             long endTime = System.currentTimeMillis();
-            long beginTime = endTime - 10000;
+            long beginTime = endTime - 100;
             String result = "";
             UsageEvents.Event event = new UsageEvents.Event();
             UsageEvents usageEvents = sUsageStatsManager.queryEvents(beginTime, endTime);
@@ -211,22 +163,8 @@ public class LockService extends IntentService {
         return "";
     }
 
-    @NonNull
-    private List<String> getHomes() {
-        List<String> names = new ArrayList<>();
-        PackageManager packageManager = this.getPackageManager();
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        List<ResolveInfo> resolveInfo = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        for (ResolveInfo ri : resolveInfo) {
-            names.add(ri.activityInfo.packageName);
-        }
-        return names;
-    }
-
     private void passwordLock(String packageName) {
-        LockApplication.clearAllActivity();
-
+        // LockApplication.clearAllActivity();
         Intent intent = new Intent(this, GestureUnlockActivity.class);
         intent.putExtra(AppConstants.LOCK_PACKAGE_NAME, packageName);
         intent.putExtra(AppConstants.LOCK_FROM, AppConstants.LOCK_FROM_FINISH);
