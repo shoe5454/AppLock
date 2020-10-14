@@ -30,7 +30,6 @@ import com.lzx.lock.utils.SpUtil;
 import com.lzx.lock.utils.StatusBarUtil;
 import com.lzx.lock.widget.LockPatternView;
 import com.lzx.lock.widget.LockPatternViewPattern;
-import com.lzx.lock.widget.UnLockMenuPopWindow;
 
 import java.util.List;
 
@@ -40,10 +39,9 @@ import io.github.subhamtyagi.crashreporter.CrashReporter;
  * Created by xian on 2017/2/17.
  */
 
-public class GestureUnlockActivity extends BaseActivity implements View.OnClickListener {
+public class GestureUnlockActivity extends BaseActivity {
 
     public static final String FINISH_UNLOCK_THIS_APP = "finish_unlock_this_app";
-    private ImageView mIconMore;
     private LockPatternView mLockPatternView;
     private ImageView mUnLockIcon, mBgLayout, mAppLogo;
     private TextView mUnLockText, mUnlockFailTip, mAppLabel;
@@ -54,7 +52,6 @@ public class GestureUnlockActivity extends BaseActivity implements View.OnClickL
     private LockPatternUtils mLockPatternUtils;
     private int mFailedPatternAttemptsSinceLastTimeout = 0;
     private CommLockInfoManager mLockInfoManager;
-    private UnLockMenuPopWindow mPopWindow;
     private LockPatternViewPattern mPatternViewPattern;
     private GestureUnlockReceiver mGestureUnlockReceiver;
     private ApplicationInfo appInfo;
@@ -76,7 +73,6 @@ public class GestureUnlockActivity extends BaseActivity implements View.OnClickL
     protected void initViews(Bundle savedInstanceState) {
         StatusBarUtil.setTransparent(this);
         mUnLockLayout = findViewById(R.id.unlock_layout);
-        mIconMore = findViewById(R.id.btn_more);
         mLockPatternView = findViewById(R.id.unlock_lock_view);
         mUnLockIcon = findViewById(R.id.unlock_icon);
         mBgLayout = findViewById(R.id.bg_layout);
@@ -92,7 +88,6 @@ public class GestureUnlockActivity extends BaseActivity implements View.OnClickL
         actionFrom = getIntent().getStringExtra(AppConstants.LOCK_FROM);
         packageManager = getPackageManager();
         mLockInfoManager = new CommLockInfoManager(this);
-        mPopWindow = new UnLockMenuPopWindow(this, pkgName, true);
 
 
 
@@ -215,16 +210,6 @@ public class GestureUnlockActivity extends BaseActivity implements View.OnClickL
 
     @Override
     protected void initAction() {
-        mIconMore.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(@NonNull View view) {
-        switch (view.getId()) {
-            case R.id.btn_more:
-                mPopWindow.showAsDropDown(mIconMore);
-                break;
-        }
     }
 
     @Override

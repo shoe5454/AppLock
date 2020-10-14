@@ -25,16 +25,6 @@
         android:textColor="@color/white"
         android:textSize="18sp"/>
 
-    <ImageView
-        android:id="@+id/btn_more"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="20dp"
-        android:paddingRight="20dp"
-        android:src="@drawable/ic_menu_small"/>
-
     <com.lzx.lock.widget.LockPatternView
         android:id="@+id/unlock_lock_view"
         android:layout_width="280.0dip"
@@ -50,9 +40,9 @@
         android:id="@+id/unlock_icon"
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:layout_above="@+id/unlock_text"
+        android:layout_below="@+id/app_label"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp"
+        android:layout_marginTop="5dp"
         android:scaleType="fitCenter"
         android:src="@mipmap/ic_launcher"
         android:visibility="visible"/>
@@ -61,8 +51,8 @@
         android:id="@+id/unlock_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/unlock_fail_tip"
-        android:layout_marginBottom="15dp"
+        android:layout_below="@+id/unlock_icon"
+        android:layout_marginTop="5dp"
         android:gravity="center_horizontal"
         android:textColor="@android:color/white"
         android:textSize="16.0sp"
@@ -72,8 +62,8 @@
         android:id="@+id/unlock_fail_tip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/unlock_lock_view"
-        android:layout_marginBottom="30dp"
+        android:layout_below="@+id/unlock_text"
+        android:layout_marginTop="15dp"
         android:gravity="center_horizontal"
         android:textColor="@color/white"
         android:textSize="16sp"
