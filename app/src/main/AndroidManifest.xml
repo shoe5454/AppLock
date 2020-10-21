@@ -42,10 +42,6 @@
             android:label="Create Password"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activities.lock.GestureSelfUnlockActivity"
-            android:label="Unlock"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activities.lock.GestureUnlockActivity"
             android:excludeFromRecents="true"
             android:label=""

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -32,6 +33,8 @@ public class AnswerSelectionView extends LinearLayout {
         myButton.setText("A cat");
         Typeface typeface = ResourcesCompat.getFont(this.getContext(), R.font.kg_first_time_in_forever);
         myButton.setTypeface(typeface);
+        myButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f);
+        myButton.setTransformationMethod(null);
         myButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

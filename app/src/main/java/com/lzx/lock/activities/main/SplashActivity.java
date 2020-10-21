@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import com.lzx.lock.R;
 import com.lzx.lock.base.AppConstants;
 import com.lzx.lock.base.BaseActivity;
-import com.lzx.lock.activities.lock.GestureSelfUnlockActivity;
 import com.lzx.lock.activities.pwd.CreatePwdActivity;
 import com.lzx.lock.services.BackgroundManager;
 import com.lzx.lock.services.LoadAppListService;
@@ -68,12 +67,17 @@ public class SplashActivity extends BaseActivity {
                 if (isFirstLock) {
                     showDialog();
                 } else {
-                    Intent intent = new Intent(SplashActivity.this, GestureSelfUnlockActivity.class);
+                    /*Intent intent = new Intent(SplashActivity.this, GestureSelfUnlockActivity.class);
                     intent.putExtra(AppConstants.LOCK_PACKAGE_NAME, AppConstants.APP_PACKAGE_NAME);
                     intent.putExtra(AppConstants.LOCK_FROM, AppConstants.LOCK_FROM_LOCK_MAIN_ACITVITY);
+                    startActivity(intent);*/
+                    //finish();
+                    //overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                     startActivity(intent);
-                    finish();
                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                    finish();
+
                 }
             }
         });
