@@ -12,7 +12,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.Display;
-import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -43,8 +42,8 @@ public class GestureUnlockActivity extends BaseActivity {
 
     public static final String FINISH_UNLOCK_THIS_APP = "finish_unlock_this_app";
     private LockPatternView mLockPatternView;
-    private ImageView mUnLockIcon, mBgLayout, mAppLogo;
-    private TextView mUnLockText, mUnlockFailTip, mAppLabel;
+    private ImageView mUnLockIcon, mBgLayout, mAppLogo, mUnLockQuestionImage;
+    private TextView mUnLockText, mUnlockQuestionText, mAppLabel;
     private RelativeLayout mUnLockLayout;
     private PackageManager packageManager;
     private String pkgName;
@@ -77,7 +76,8 @@ public class GestureUnlockActivity extends BaseActivity {
         mUnLockIcon = findViewById(R.id.unlock_icon);
         mBgLayout = findViewById(R.id.bg_layout);
         mUnLockText = findViewById(R.id.unlock_text);
-        mUnlockFailTip = findViewById(R.id.unlock_fail_tip);
+        mUnlockQuestionText = findViewById(R.id.unlock_question_text);
+        mUnLockQuestionImage = findViewById(R.id.unlock_question_image);
         mAppLogo = findViewById(R.id.app_logo);
         mAppLabel = findViewById(R.id.app_label);
     }
@@ -111,7 +111,8 @@ public class GestureUnlockActivity extends BaseActivity {
                 appLabel = packageManager.getApplicationLabel(appInfo).toString();
                 mUnLockIcon.setImageDrawable(iconDrawable);
                 mUnLockText.setText(appLabel);
-                mUnlockFailTip.setText(getString(R.string.password_gestrue_tips));
+                mUnlockQuestionText.setText(getString(R.string.password_gestrue_tips));
+                mUnLockQuestionImage.setImageDrawable(iconDrawable);
                 final Drawable icon = packageManager.getApplicationIcon(appInfo);
                 mUnLockLayout.setBackgroundDrawable(icon);
                 mUnLockLayout.getViewTreeObserver().addOnPreDrawListener(
@@ -175,7 +176,7 @@ public class GestureUnlockActivity extends BaseActivity {
                         int retry = LockPatternUtils.FAILED_ATTEMPTS_BEFORE_TIMEOUT - mFailedPatternAttemptsSinceLastTimeout;
                         if (retry >= 0) {
                             String format = getResources().getString(R.string.password_error_count);
-                            mUnlockFailTip.setText(format);
+                            mUnlockQuestionText.setText(format);
                             //TODO: click a pic of intruder
                         }
                     } else {
