@@ -27,6 +27,7 @@ import com.lzx.lock.utils.LockPatternUtils;
 import com.lzx.lock.utils.LockUtil;
 import com.lzx.lock.utils.SpUtil;
 import com.lzx.lock.utils.StatusBarUtil;
+import com.lzx.lock.widget.AnswerSelectionView;
 import com.lzx.lock.widget.LockPatternView;
 import com.lzx.lock.widget.LockPatternViewPattern;
 
@@ -41,7 +42,7 @@ import io.github.subhamtyagi.crashreporter.CrashReporter;
 public class GestureUnlockActivity extends BaseActivity {
 
     public static final String FINISH_UNLOCK_THIS_APP = "finish_unlock_this_app";
-    private LockPatternView mLockPatternView;
+    private AnswerSelectionView mAnswerSelectionView;
     private ImageView mUnLockIcon, mBgLayout, mAppLogo, mUnLockQuestionImage;
     private TextView mUnLockText, mUnlockQuestionText, mAppLabel;
     private RelativeLayout mUnLockLayout;
@@ -59,7 +60,7 @@ public class GestureUnlockActivity extends BaseActivity {
     @NonNull
     private Runnable mClearPatternRunnable = new Runnable() {
         public void run() {
-            mLockPatternView.clearPattern();
+            mAnswerSelectionView.clearAnswer();
         }
     };
 
@@ -72,7 +73,7 @@ public class GestureUnlockActivity extends BaseActivity {
     protected void initViews(Bundle savedInstanceState) {
         StatusBarUtil.setTransparent(this);
         mUnLockLayout = findViewById(R.id.unlock_layout);
-        mLockPatternView = findViewById(R.id.unlock_lock_view);
+        mAnswerSelectionView = findViewById(R.id.unlock_answer_selection);
         mUnLockIcon = findViewById(R.id.unlock_icon);
         mBgLayout = findViewById(R.id.bg_layout);
         mUnLockText = findViewById(R.id.unlock_text);
@@ -145,14 +146,15 @@ public class GestureUnlockActivity extends BaseActivity {
     }
 
     private void initLockPatternView() {
-        mLockPatternView.setLineColorRight(0x80ffffff);
-        mLockPatternUtils = new LockPatternUtils(this);
-        mPatternViewPattern = new LockPatternViewPattern(mLockPatternView);
+        mAnswerSelectionView.setAnswers();
+        //mAnswerSelectionView.setLineColorRight(0x80ffffff);
+        //mLockPatternUtils = new LockPatternUtils(this);
+        /*mPatternViewPattern = new LockPatternViewPattern(mAnswerSelectionView);
         mPatternViewPattern.setPatternListener(new LockPatternViewPattern.onPatternListener() {
             @Override
             public void onPatternDetected(@NonNull List<LockPatternView.Cell> pattern) {
                 if (mLockPatternUtils.checkPattern(pattern)) { //
-                    mLockPatternView.setDisplayMode(LockPatternView.DisplayMode.Correct);
+                    mAnswerSelectionView.setDisplayMode(LockPatternView.DisplayMode.Correct);
                     if (actionFrom.equals(AppConstants.LOCK_FROM_LOCK_MAIN_ACITVITY)) {
                         startActivity(new Intent(GestureUnlockActivity.this, MainActivity.class));
                         finish();
@@ -170,7 +172,7 @@ public class GestureUnlockActivity extends BaseActivity {
                         finish();
                     }
                 } else {
-                    mLockPatternView.setDisplayMode(LockPatternView.DisplayMode.Wrong);
+                    mAnswerSelectionView.setDisplayMode(LockPatternView.DisplayMode.Wrong);
                     if (pattern.size() >= LockPatternUtils.MIN_PATTERN_REGISTER_FAIL) {
                         mFailedPatternAttemptsSinceLastTimeout++;
                         int retry = LockPatternUtils.FAILED_ATTEMPTS_BEFORE_TIMEOUT - mFailedPatternAttemptsSinceLastTimeout;
@@ -184,18 +186,64 @@ public class GestureUnlockActivity extends BaseActivity {
                         //ToastUtil.showShort(getString(R.string.password_short));
                     }
                     if (mFailedPatternAttemptsSinceLastTimeout >= 3) {
-                        mLockPatternView.postDelayed(mClearPatternRunnable, 500);
+                        mAnswerSelectionView.postDelayed(mClearPatternRunnable, 500);
                     }
                     if (mFailedPatternAttemptsSinceLastTimeout >= LockPatternUtils.FAILED_ATTEMPTS_BEFORE_TIMEOUT) { // The number of failures is greater than the maximum number of error attempts before blocking the user
-                        mLockPatternView.postDelayed(mClearPatternRunnable, 500);
+                        mAnswerSelectionView.postDelayed(mClearPatternRunnable, 500);
                     } else {
-                        mLockPatternView.postDelayed(mClearPatternRunnable, 500);
+                        mAnswerSelectionView.postDelayed(mClearPatternRunnable, 500);
                     }
                 }
             }
         });
-        mLockPatternView.setOnPatternListener(mPatternViewPattern);
-        mLockPatternView.setTactileFeedbackEnabled(true);
+        mAnswerSelectionView.setOnPatternListener(mPatternViewPattern);*/
+        mAnswerSelectionView.setOnPatternListener(new AnswerSelectionView.OnPatternListener() {
+            @Override
+            public void onAnswerSelected() {
+                //if (mLockPatternUtils.checkPattern(pattern)) { //
+                    //mAnswerSelectionView.setDisplayMode(LockPatternView.DisplayMode.Correct);
+                    if (actionFrom.equals(AppConstants.LOCK_FROM_LOCK_MAIN_ACITVITY)) {
+                        startActivity(new Intent(GestureUnlockActivity.this, MainActivity.class));
+                        finish();
+                    } else {
+                        SpUtil.getInstance().putLong(AppConstants.LOCK_CURR_MILLISECONDS, System.currentTimeMillis());
+                        SpUtil.getInstance().putString(AppConstants.LOCK_LAST_LOAD_PKG_NAME, pkgName);
+
+                        //Send the last unlocked time to the app lock service
+                        Intent intent = new Intent(LockService.UNLOCK_ACTION);
+                        intent.putExtra(LockService.LOCK_SERVICE_LASTTIME, System.currentTimeMillis());
+                        intent.putExtra(LockService.LOCK_SERVICE_LASTAPP, pkgName);
+                        sendBroadcast(intent);
+
+                        mLockInfoManager.unlockCommApplication(pkgName);
+                        finish();
+                    }
+                /*} else {
+                    mAnswerSelectionView.setDisplayMode(LockPatternView.DisplayMode.Wrong);
+                    if (pattern.size() >= LockPatternUtils.MIN_PATTERN_REGISTER_FAIL) {
+                        mFailedPatternAttemptsSinceLastTimeout++;
+                        int retry = LockPatternUtils.FAILED_ATTEMPTS_BEFORE_TIMEOUT - mFailedPatternAttemptsSinceLastTimeout;
+                        if (retry >= 0) {
+                            String format = getResources().getString(R.string.password_error_count);
+                            mUnlockQuestionText.setText(format);
+                            //TODO: click a pic of intruder
+                        }
+                    } else {
+
+                        //ToastUtil.showShort(getString(R.string.password_short));
+                    }
+                    if (mFailedPatternAttemptsSinceLastTimeout >= 3) {
+                        mAnswerSelectionView.postDelayed(mClearPatternRunnable, 500);
+                    }
+                    if (mFailedPatternAttemptsSinceLastTimeout >= LockPatternUtils.FAILED_ATTEMPTS_BEFORE_TIMEOUT) { // The number of failures is greater than the maximum number of error attempts before blocking the user
+                        mAnswerSelectionView.postDelayed(mClearPatternRunnable, 500);
+                    } else {
+                        mAnswerSelectionView.postDelayed(mClearPatternRunnable, 500);
+                    }
+                }*/
+            }
+        });
+        //mAnswerSelectionView.setTactileFeedbackEnabled(true);
     }
 
     @Override
