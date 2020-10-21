@@ -43,8 +43,8 @@ public class GestureUnlockActivity extends BaseActivity {
 
     public static final String FINISH_UNLOCK_THIS_APP = "finish_unlock_this_app";
     private AnswerSelectionView mAnswerSelectionView;
-    private ImageView mUnLockIcon, mBgLayout, mAppLogo, mUnLockQuestionImage;
-    private TextView mUnLockText, mUnlockQuestionText, mAppLabel;
+    private ImageView mBgLayout, mUnLockQuestionImage;
+    private TextView mUnlockQuestionText;
     private RelativeLayout mUnLockLayout;
     private PackageManager packageManager;
     private String pkgName;
@@ -74,13 +74,9 @@ public class GestureUnlockActivity extends BaseActivity {
         StatusBarUtil.setTransparent(this);
         mUnLockLayout = findViewById(R.id.unlock_layout);
         mAnswerSelectionView = findViewById(R.id.unlock_answer_selection);
-        mUnLockIcon = findViewById(R.id.unlock_icon);
         mBgLayout = findViewById(R.id.bg_layout);
-        mUnLockText = findViewById(R.id.unlock_text);
         mUnlockQuestionText = findViewById(R.id.unlock_question_text);
         mUnLockQuestionImage = findViewById(R.id.unlock_question_image);
-        mAppLogo = findViewById(R.id.app_logo);
-        mAppLabel = findViewById(R.id.app_label);
     }
 
     @Override
@@ -93,7 +89,7 @@ public class GestureUnlockActivity extends BaseActivity {
 
 
         initLayoutBackground();
-        initLockPatternView();
+        initAnswerSelectionView();
 
 
         mGestureUnlockReceiver = new GestureUnlockReceiver();
@@ -110,10 +106,8 @@ public class GestureUnlockActivity extends BaseActivity {
             if (appInfo != null) {
                 iconDrawable = packageManager.getApplicationIcon(appInfo);
                 appLabel = packageManager.getApplicationLabel(appInfo).toString();
-                mUnLockIcon.setImageDrawable(iconDrawable);
-                mUnLockText.setText(appLabel);
                 mUnlockQuestionText.setText("What is this animal?");
-                mUnLockQuestionImage.setImageDrawable(iconDrawable);
+                mUnLockQuestionImage.setImageResource(R.drawable.question_cat);
                 final Drawable icon = packageManager.getApplicationIcon(appInfo);
                 mUnLockLayout.setBackgroundDrawable(icon);
                 mUnLockLayout.getViewTreeObserver().addOnPreDrawListener(
@@ -145,7 +139,7 @@ public class GestureUnlockActivity extends BaseActivity {
         }
     }
 
-    private void initLockPatternView() {
+    private void initAnswerSelectionView() {
         mAnswerSelectionView.setAnswers();
         //mAnswerSelectionView.setLineColorRight(0x80ffffff);
         //mLockPatternUtils = new LockPatternUtils(this);
