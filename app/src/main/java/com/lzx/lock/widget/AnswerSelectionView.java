@@ -1,6 +1,8 @@
 package com.lzx.lock.widget;
 
 import android.content.Context;
+import android.graphics.Typeface;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +30,8 @@ public class AnswerSelectionView extends LinearLayout {
     public void setAnswers() {
         Button myButton = new Button(this.getContext());
         myButton.setText("A cat");
+        Typeface typeface = ResourcesCompat.getFont(this.getContext(), R.font.kg_first_time_in_forever);
+        myButton.setTypeface(typeface);
         myButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
