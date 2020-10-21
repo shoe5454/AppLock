@@ -112,7 +112,7 @@ public class GestureUnlockActivity extends BaseActivity {
                 appLabel = packageManager.getApplicationLabel(appInfo).toString();
                 mUnLockIcon.setImageDrawable(iconDrawable);
                 mUnLockText.setText(appLabel);
-                mUnlockQuestionText.setText(getString(R.string.password_gestrue_tips));
+                mUnlockQuestionText.setText("What is this animal?");
                 mUnLockQuestionImage.setImageDrawable(iconDrawable);
                 final Drawable icon = packageManager.getApplicationIcon(appInfo);
                 mUnLockLayout.setBackgroundDrawable(icon);
