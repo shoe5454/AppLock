@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.Display;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -43,9 +44,9 @@ public class GestureUnlockActivity extends BaseActivity {
 
     public static final String FINISH_UNLOCK_THIS_APP = "finish_unlock_this_app";
     private AnswerSelectionView mAnswerSelectionView;
-    private ImageView mBgLayout, mUnLockQuestionImage;
+    private ImageView mUnLockQuestionImage;
     private TextView mUnlockQuestionText;
-    private RelativeLayout mUnLockLayout;
+    private ViewGroup mUnLockLayout;
     private PackageManager packageManager;
     private String pkgName;
     private String actionFrom;
@@ -74,7 +75,6 @@ public class GestureUnlockActivity extends BaseActivity {
         StatusBarUtil.setTransparent(this);
         mUnLockLayout = findViewById(R.id.unlock_layout);
         mAnswerSelectionView = findViewById(R.id.unlock_answer_selection);
-        mBgLayout = findViewById(R.id.bg_layout);
         mUnlockQuestionText = findViewById(R.id.unlock_question_text);
         mUnLockQuestionImage = findViewById(R.id.unlock_question_image);
     }

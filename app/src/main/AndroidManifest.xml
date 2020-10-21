@@ -47,7 +47,7 @@
             android:label=""
             android:launchMode="singleTask"
             android:noHistory="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="sensor"
             android:theme="@style/unlock_activity_style"/>
         <activity
             android:name=".activities.setting.LockSettingActivity"
