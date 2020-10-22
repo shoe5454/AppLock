@@ -15,23 +15,25 @@ import android.view.Display;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.lzx.lock.LockApplication;
 import com.lzx.lock.R;
 import com.lzx.lock.activities.main.MainActivity;
 import com.lzx.lock.base.AppConstants;
 import com.lzx.lock.base.BaseActivity;
 import com.lzx.lock.db.CommLockInfoManager;
+import com.lzx.lock.db.entities.Answer;
+import com.lzx.lock.db.entities.AnswerSubtype;
 import com.lzx.lock.services.LockService;
 import com.lzx.lock.utils.LockPatternUtils;
 import com.lzx.lock.utils.LockUtil;
 import com.lzx.lock.utils.SpUtil;
 import com.lzx.lock.utils.StatusBarUtil;
 import com.lzx.lock.widget.AnswerSelectionView;
-import com.lzx.lock.widget.LockPatternView;
 import com.lzx.lock.widget.LockPatternViewPattern;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.github.subhamtyagi.crashreporter.CrashReporter;
@@ -58,6 +60,7 @@ public class GestureUnlockActivity extends BaseActivity {
     private ApplicationInfo appInfo;
     private Drawable iconDrawable;
     private String appLabel;
+    private Answer mCorrectAnswer;
     @NonNull
     private Runnable mClearPatternRunnable = new Runnable() {
         public void run() {
@@ -86,7 +89,9 @@ public class GestureUnlockActivity extends BaseActivity {
         packageManager = getPackageManager();
         mLockInfoManager = new CommLockInfoManager(this);
 
-
+        // TODO
+        List<Answer> answers = ((LockApplication)this.getApplication()).getDb().answerDao().getAll();
+        mCorrectAnswer = answers.get(0);
 
         initLayoutBackground();
         initAnswerSelectionView();
@@ -106,8 +111,8 @@ public class GestureUnlockActivity extends BaseActivity {
             if (appInfo != null) {
                 iconDrawable = packageManager.getApplicationIcon(appInfo);
                 appLabel = packageManager.getApplicationLabel(appInfo).toString();
-                mUnlockQuestionText.setText("What is this animal?");
-                mUnLockQuestionImage.setImageResource(R.drawable.question_cat);
+                mUnlockQuestionText.setText("What is this " + AnswerSubtype.values()[mCorrectAnswer.subtype].name() + "?");
+                mUnLockQuestionImage.setImageResource(mCorrectAnswer.imageResId);
                 final Drawable icon = packageManager.getApplicationIcon(appInfo);
                 mUnLockLayout.setBackgroundDrawable(icon);
                 mUnLockLayout.getViewTreeObserver().addOnPreDrawListener(
@@ -140,7 +145,9 @@ public class GestureUnlockActivity extends BaseActivity {
     }
 
     private void initAnswerSelectionView() {
-        mAnswerSelectionView.setAnswers();
+        List<Answer> answers = new ArrayList<>();
+        answers.add(mCorrectAnswer);
+        mAnswerSelectionView.setAnswers(answers);
         //mAnswerSelectionView.setLineColorRight(0x80ffffff);
         //mLockPatternUtils = new LockPatternUtils(this);
         /*mPatternViewPattern = new LockPatternViewPattern(mAnswerSelectionView);
@@ -193,7 +200,7 @@ public class GestureUnlockActivity extends BaseActivity {
         mAnswerSelectionView.setOnPatternListener(mPatternViewPattern);*/
         mAnswerSelectionView.setOnPatternListener(new AnswerSelectionView.OnPatternListener() {
             @Override
-            public void onAnswerSelected() {
+            public void onAnswerSelected(Answer answer) {
                 //if (mLockPatternUtils.checkPattern(pattern)) { //
                     //mAnswerSelectionView.setDisplayMode(LockPatternView.DisplayMode.Correct);
                     if (actionFrom.equals(AppConstants.LOCK_FROM_LOCK_MAIN_ACITVITY)) {

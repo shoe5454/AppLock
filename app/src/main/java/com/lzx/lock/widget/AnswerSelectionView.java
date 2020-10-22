@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.lzx.lock.R;
+import com.lzx.lock.db.entities.Answer;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class AnswerSelectionView extends LinearLayout {
     private AnswerSelectionView.OnPatternListener mOnPatternListener;
 
     public interface OnPatternListener {
-        void onAnswerSelected();
+        void onAnswerSelected(Answer answer);
     }
 
     public AnswerSelectionView(Context context, AttributeSet set) {
@@ -28,31 +29,35 @@ public class AnswerSelectionView extends LinearLayout {
         // TODO
     }
 
-    public void setAnswers() {
-        Button myButton = new Button(this.getContext());
-        myButton.setText("A cat");
+    public void setAnswers(List<Answer> answers) {
         Typeface typeface = ResourcesCompat.getFont(this.getContext(), R.font.kg_first_time_in_forever);
-        myButton.setTypeface(typeface);
-        myButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f);
-        myButton.setTransformationMethod(null);
-        myButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                notifyAnswerSelected();
-            }
-        });
+        for (Answer answer : answers) {
+            final Answer a = answer;
+            Button myButton = new Button(this.getContext());
+            myButton.setText("A " + answer.text);
+            //myButton.setDa
+            myButton.setTypeface(typeface);
+            myButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f);
+            myButton.setTransformationMethod(null);
+            myButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    notifyAnswerSelected(a);
+                }
+            });
+            LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+            this.addView(myButton, lp);
+        }
 
-        LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        this.addView(myButton, lp);
     }
 
     public void setOnPatternListener(AnswerSelectionView.OnPatternListener onPatternListener) {
         mOnPatternListener = onPatternListener;
     }
 
-    private void notifyAnswerSelected() {
+    private void notifyAnswerSelected(Answer answer) {
         if (mOnPatternListener != null) {
-            mOnPatternListener.onAnswerSelected();
+            mOnPatternListener.onAnswerSelected(answer);
         }
         //sendAccessEvent(R.string.lockscreen_access_pattern_start);
     }
