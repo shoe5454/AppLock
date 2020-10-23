@@ -99,10 +99,18 @@ public class GestureUnlockActivity extends BaseActivity {
         executor.execute(() -> {
             AnswerDao dao = ((LockApplication)this.getApplication()).getDb().answerDao();
             int count = dao.getCount();
-            int uid = new Random().nextInt(count) + 1;
-            Answer answer = dao.getByUid(uid);
+            int correctAnswerUid = new Random().nextInt(count) + 1;
+            Answer correctAnswer = dao.getByUid(correctAnswerUid);
+            List<Answer> otherAnswers = new ArrayList<>();
+            while (otherAnswers.size() < 3) {
+                final int uid = new Random().nextInt(count) + 1;
+                if (uid != correctAnswer.uid && otherAnswers.stream().noneMatch((answer) -> answer.uid == uid)) {
+                    Answer otherAnswer = dao.getByUid(uid);
+                    otherAnswers.add(otherAnswer);
+                }
+            }
             new Handler(Looper.getMainLooper()).post(() -> {
-               updateAnswerSelectionView(answer);
+               updateAnswerSelectionView(correctAnswer, otherAnswers);
             });
         });
 
@@ -255,12 +263,13 @@ public class GestureUnlockActivity extends BaseActivity {
         //mAnswerSelectionView.setTactileFeedbackEnabled(true);
     }
 
-    private void updateAnswerSelectionView(Answer correctAnswer) {
+    private void updateAnswerSelectionView(Answer correctAnswer, List<Answer> otherAnswers) {
         mCorrectAnswer = correctAnswer;
         mUnlockQuestionText.setText("What is this " + AnswerSubtype.values()[mCorrectAnswer.subtype].name().toLowerCase() + "?");
         mUnLockQuestionImage.setImageResource(mCorrectAnswer.imageResId);
         List<Answer> answers = new ArrayList<>();
         answers.add(mCorrectAnswer);
+        answers.addAll(otherAnswers);
         mAnswerSelectionView.setAnswers(answers);
     }
 

@@ -34,12 +34,11 @@
         android:id="@+id/unlock_answer_selection"
         android:layout_width="280.0dip"
         android:layout_height="280.0dip"
-        android:orientation="vertical"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="80dp"
-        />
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical" />
 
 </RelativeLayout>
 
