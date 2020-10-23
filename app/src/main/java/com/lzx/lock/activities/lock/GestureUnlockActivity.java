@@ -10,6 +10,8 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.view.Display;
 import android.view.ViewGroup;
@@ -35,6 +37,8 @@ import com.lzx.lock.widget.LockPatternViewPattern;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import io.github.subhamtyagi.crashreporter.CrashReporter;
 
@@ -45,6 +49,7 @@ import io.github.subhamtyagi.crashreporter.CrashReporter;
 public class GestureUnlockActivity extends BaseActivity {
 
     public static final String FINISH_UNLOCK_THIS_APP = "finish_unlock_this_app";
+    private final Executor executor = Executors.newSingleThreadExecutor();
     private AnswerSelectionView mAnswerSelectionView;
     private ImageView mUnLockQuestionImage;
     private TextView mUnlockQuestionText;
@@ -89,9 +94,12 @@ public class GestureUnlockActivity extends BaseActivity {
         packageManager = getPackageManager();
         mLockInfoManager = new CommLockInfoManager(this);
 
-        // TODO
-        List<Answer> answers = ((LockApplication)this.getApplication()).getDb().answerDao().getAll();
-        mCorrectAnswer = answers.get(0);
+        executor.execute(() -> {
+            List<Answer> answers = ((LockApplication)this.getApplication()).getDb().answerDao().getAll();
+            new Handler(Looper.getMainLooper()).post(() -> {
+               updateAnswerSelectionView(answers.get(0));
+            });
+        });
 
         initLayoutBackground();
         initAnswerSelectionView();
@@ -111,8 +119,6 @@ public class GestureUnlockActivity extends BaseActivity {
             if (appInfo != null) {
                 iconDrawable = packageManager.getApplicationIcon(appInfo);
                 appLabel = packageManager.getApplicationLabel(appInfo).toString();
-                mUnlockQuestionText.setText("What is this " + AnswerSubtype.values()[mCorrectAnswer.subtype].name() + "?");
-                mUnLockQuestionImage.setImageResource(mCorrectAnswer.imageResId);
                 final Drawable icon = packageManager.getApplicationIcon(appInfo);
                 mUnLockLayout.setBackgroundDrawable(icon);
                 mUnLockLayout.getViewTreeObserver().addOnPreDrawListener(
@@ -145,9 +151,6 @@ public class GestureUnlockActivity extends BaseActivity {
     }
 
     private void initAnswerSelectionView() {
-        List<Answer> answers = new ArrayList<>();
-        answers.add(mCorrectAnswer);
-        mAnswerSelectionView.setAnswers(answers);
         //mAnswerSelectionView.setLineColorRight(0x80ffffff);
         //mLockPatternUtils = new LockPatternUtils(this);
         /*mPatternViewPattern = new LockPatternViewPattern(mAnswerSelectionView);
@@ -245,6 +248,15 @@ public class GestureUnlockActivity extends BaseActivity {
             }
         });
         //mAnswerSelectionView.setTactileFeedbackEnabled(true);
+    }
+
+    private void updateAnswerSelectionView(Answer correctAnswer) {
+        mCorrectAnswer = correctAnswer;
+        mUnlockQuestionText.setText("What is this " + AnswerSubtype.values()[mCorrectAnswer.subtype].name().toLowerCase() + "?");
+        mUnLockQuestionImage.setImageResource(mCorrectAnswer.imageResId);
+        List<Answer> answers = new ArrayList<>();
+        answers.add(mCorrectAnswer);
+        mAnswerSelectionView.setAnswers(answers);
     }
 
     @Override
