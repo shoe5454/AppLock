@@ -25,6 +25,7 @@ import com.lzx.lock.activities.main.MainActivity;
 import com.lzx.lock.base.AppConstants;
 import com.lzx.lock.base.BaseActivity;
 import com.lzx.lock.db.CommLockInfoManager;
+import com.lzx.lock.db.dao.AnswerDao;
 import com.lzx.lock.db.entities.Answer;
 import com.lzx.lock.db.entities.AnswerSubtype;
 import com.lzx.lock.services.LockService;
@@ -37,6 +38,7 @@ import com.lzx.lock.widget.LockPatternViewPattern;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -63,8 +65,8 @@ public class GestureUnlockActivity extends BaseActivity {
     private LockPatternViewPattern mPatternViewPattern;
     private GestureUnlockReceiver mGestureUnlockReceiver;
     private ApplicationInfo appInfo;
-    private Drawable iconDrawable;
-    private String appLabel;
+    //private Drawable iconDrawable;
+    //private String appLabel;
     private Answer mCorrectAnswer;
     @NonNull
     private Runnable mClearPatternRunnable = new Runnable() {
@@ -95,9 +97,12 @@ public class GestureUnlockActivity extends BaseActivity {
         mLockInfoManager = new CommLockInfoManager(this);
 
         executor.execute(() -> {
-            List<Answer> answers = ((LockApplication)this.getApplication()).getDb().answerDao().getAll();
+            AnswerDao dao = ((LockApplication)this.getApplication()).getDb().answerDao();
+            int count = dao.getCount();
+            int uid = new Random().nextInt(count) + 1;
+            Answer answer = dao.getByUid(uid);
             new Handler(Looper.getMainLooper()).post(() -> {
-               updateAnswerSelectionView(answers.get(0));
+               updateAnswerSelectionView(answer);
             });
         });
 
@@ -117,8 +122,8 @@ public class GestureUnlockActivity extends BaseActivity {
         try {
             appInfo = packageManager.getApplicationInfo(pkgName, PackageManager.GET_UNINSTALLED_PACKAGES);
             if (appInfo != null) {
-                iconDrawable = packageManager.getApplicationIcon(appInfo);
-                appLabel = packageManager.getApplicationLabel(appInfo).toString();
+                //iconDrawable = packageManager.getApplicationIcon(appInfo);
+                //appLabel = packageManager.getApplicationLabel(appInfo).toString();
                 final Drawable icon = packageManager.getApplicationIcon(appInfo);
                 mUnLockLayout.setBackgroundDrawable(icon);
                 mUnLockLayout.getViewTreeObserver().addOnPreDrawListener(

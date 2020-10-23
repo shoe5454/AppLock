@@ -42,23 +42,7 @@ public class LockApplication extends LitePalApplication {
         //Crash reporter utility
         CrashReporter.initialize(this, getCacheDir().getPath());
 
-        RoomDatabase.Callback rdc = new RoomDatabase.Callback() {
-            public void onCreate (SupportSQLiteDatabase db) {
-                ContentValues cv = new ContentValues();
-                cv.put("type", AnswerType.THING_IDENTIFICATION.ordinal());
-                cv.put("subtype", AnswerSubtype.ANIMAL.ordinal());
-                cv.put("imageResId", R.drawable.question_cat);
-                cv.put("text", "cat");
-                cv.put("plural", false);
-                db.insert("answer", SQLiteDatabase.CONFLICT_NONE, cv);
-                /*LockApplication.this.db.answerDao().insert(new Answer()
-                        .withType(AnswerType.THING_IDENTIFICATION, AnswerSubtype.ANIMAL)
-                        .withDetail(R.drawable.question_cat, "cat", false));*/
-            }
-        };
-        db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "reading-lock")
-                .addCallback(rdc)
-                .build();
+        db = AppDatabase.populate(this.getApplicationContext());
 
         SpUtil.getInstance().init(application);
         activityList = new ArrayList<>();

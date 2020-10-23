@@ -10,8 +10,14 @@ import java.util.List;
 
 @Dao
 public interface AnswerDao {
+    @Query("SELECT COUNT(uid) FROM answer")
+    int getCount();
+
     @Query("SELECT * FROM answer")
     List<Answer> getAll();
+
+    @Query("SELECT * FROM answer WHERE uid = :uid")
+    Answer getByUid(int uid);
 
     @Insert
     void insertAll(Answer... answers);

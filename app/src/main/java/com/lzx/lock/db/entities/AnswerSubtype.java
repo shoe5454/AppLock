@@ -5,7 +5,6 @@ public enum AnswerSubtype {
     ANIMAL,
     FRUIT,
     FOOD,
-    VEHICLE,
 
     // COLOR_IDENTIFICATION
 }
