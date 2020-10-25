@@ -24,7 +24,10 @@ public class Answer {
     @ColumnInfo
     public boolean plural;
 
-    public Answer withType(AnswerType type, AnswerSubtype subtype) {
+    @ColumnInfo
+    public boolean startsWithVowelSound;
+
+    /*public Answer withType(AnswerType type, AnswerSubtype subtype) {
         this.type = type.ordinal();
         this.subtype = subtype.ordinal();
         return this;
@@ -35,5 +38,5 @@ public class Answer {
         this.text = text;
         this.plural = plural;
         return this;
-    }
+    }*/
 }

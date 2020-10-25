@@ -85,7 +85,7 @@ public class SplashActivity extends BaseActivity {
 
     private void showDialog() {
         // If you do not have access to view usage rights and the phone exists to view usage this interface
-        if (!LockUtil.isStatAccessPermissionSet(SplashActivity.this) && LockUtil.isNoOption(SplashActivity.this)) {
+        //if (!LockUtil.isStatAccessPermissionSet(SplashActivity.this) && LockUtil.isNoOption(SplashActivity.this)) {
             DialogPermission dialog = new DialogPermission(SplashActivity.this);
             dialog.show();
             dialog.setOnClickListener(new DialogPermission.onClickListener() {
@@ -98,9 +98,9 @@ public class SplashActivity extends BaseActivity {
                     }
                 }
             });
-        } else {
-            gotoCreatePwdActivity();
-        }
+        //} else {
+        //    gotoCreatePwdActivity();
+        //}
 
     }
 

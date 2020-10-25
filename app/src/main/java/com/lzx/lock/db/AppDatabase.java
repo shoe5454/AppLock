@@ -30,6 +30,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 cv.put("imageResId", R.drawable.question_cat);
                 cv.put("text", "cat");
                 cv.put("plural", false);
+                cv.put("startsWithVowelSound", false);
                 db.insert("answer", SQLiteDatabase.CONFLICT_NONE, cv);
 
                 cv.put("type", AnswerType.THING_IDENTIFICATION.ordinal());
@@ -37,6 +38,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 cv.put("imageResId", R.drawable.question_dog);
                 cv.put("text", "dog");
                 cv.put("plural", false);
+                cv.put("startsWithVowelSound", false);
                 db.insert("answer", SQLiteDatabase.CONFLICT_NONE, cv);
 
                 cv.put("type", AnswerType.THING_IDENTIFICATION.ordinal());
@@ -44,6 +46,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 cv.put("imageResId", R.drawable.question_fish);
                 cv.put("text", "fish");
                 cv.put("plural", false);
+                cv.put("startsWithVowelSound", false);
                 db.insert("answer", SQLiteDatabase.CONFLICT_NONE, cv);
 
                 cv.put("type", AnswerType.THING_IDENTIFICATION.ordinal());
@@ -51,6 +54,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 cv.put("imageResId", R.drawable.question_duck);
                 cv.put("text", "duck");
                 cv.put("plural", false);
+                cv.put("startsWithVowelSound", false);
                 db.insert("answer", SQLiteDatabase.CONFLICT_NONE, cv);
 
                 cv.put("type", AnswerType.THING_IDENTIFICATION.ordinal());
@@ -58,6 +62,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 cv.put("imageResId", R.drawable.question_pig);
                 cv.put("text", "pig");
                 cv.put("plural", false);
+                cv.put("startsWithVowelSound", false);
                 db.insert("answer", SQLiteDatabase.CONFLICT_NONE, cv);
 
                 cv.put("type", AnswerType.THING_IDENTIFICATION.ordinal());
@@ -65,6 +70,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 cv.put("imageResId", R.drawable.question_horse);
                 cv.put("text", "horse");
                 cv.put("plural", false);
+                cv.put("startsWithVowelSound", false);
                 db.insert("answer", SQLiteDatabase.CONFLICT_NONE, cv);
 
                 cv.put("type", AnswerType.THING_IDENTIFICATION.ordinal());
@@ -72,6 +78,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 cv.put("imageResId", R.drawable.question_lion);
                 cv.put("text", "lion");
                 cv.put("plural", false);
+                cv.put("startsWithVowelSound", false);
                 db.insert("answer", SQLiteDatabase.CONFLICT_NONE, cv);
 
                 cv.put("type", AnswerType.THING_IDENTIFICATION.ordinal());
@@ -79,6 +86,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 cv.put("imageResId", R.drawable.question_elephant);
                 cv.put("text", "elephant");
                 cv.put("plural", false);
+                cv.put("startsWithVowelSound", true);
                 db.insert("answer", SQLiteDatabase.CONFLICT_NONE, cv);
 
                 cv.put("type", AnswerType.THING_IDENTIFICATION.ordinal());
@@ -86,6 +94,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 cv.put("imageResId", R.drawable.question_bird);
                 cv.put("text", "bird");
                 cv.put("plural", false);
+                cv.put("startsWithVowelSound", false);
                 db.insert("answer", SQLiteDatabase.CONFLICT_NONE, cv);
 
                 cv.put("type", AnswerType.THING_IDENTIFICATION.ordinal());
@@ -93,6 +102,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 cv.put("imageResId", R.drawable.question_whale);
                 cv.put("text", "whale");
                 cv.put("plural", false);
+                cv.put("startsWithVowelSound", false);
                 db.insert("answer", SQLiteDatabase.CONFLICT_NONE, cv);
 
                 cv.put("type", AnswerType.THING_IDENTIFICATION.ordinal());
@@ -100,6 +110,15 @@ public abstract class AppDatabase extends RoomDatabase {
                 cv.put("imageResId", R.drawable.question_shark);
                 cv.put("text", "shark");
                 cv.put("plural", false);
+                cv.put("startsWithVowelSound", false);
+                db.insert("answer", SQLiteDatabase.CONFLICT_NONE, cv);
+
+                cv.put("type", AnswerType.THING_IDENTIFICATION.ordinal());
+                cv.put("subtype", AnswerSubtype.ANIMAL.ordinal());
+                cv.put("imageResId", R.drawable.question_owl);
+                cv.put("text", "owl");
+                cv.put("plural", false);
+                cv.put("startsWithVowelSound", true);
                 db.insert("answer", SQLiteDatabase.CONFLICT_NONE, cv);
             }
         };

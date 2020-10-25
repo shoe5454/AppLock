@@ -72,6 +72,7 @@ public class GestureUnlockActivity extends BaseActivity {
     private Runnable mClearPatternRunnable = new Runnable() {
         public void run() {
             mAnswerSelectionView.clearAnswer();
+            mAnswerSelectionView.enable();
         }
     };
 
@@ -217,8 +218,8 @@ public class GestureUnlockActivity extends BaseActivity {
         mAnswerSelectionView.setOnPatternListener(new AnswerSelectionView.OnPatternListener() {
             @Override
             public void onAnswerSelected(Answer answer) {
-                //if (mLockPatternUtils.checkPattern(pattern)) { //
-                    //mAnswerSelectionView.setDisplayMode(LockPatternView.DisplayMode.Correct);
+                if (mCorrectAnswer.uid == answer.uid) { //
+                    mAnswerSelectionView.setDisplayCorrectAnswer(answer);
                     if (actionFrom.equals(AppConstants.LOCK_FROM_LOCK_MAIN_ACITVITY)) {
                         startActivity(new Intent(GestureUnlockActivity.this, MainActivity.class));
                         finish();
@@ -235,29 +236,30 @@ public class GestureUnlockActivity extends BaseActivity {
                         mLockInfoManager.unlockCommApplication(pkgName);
                         finish();
                     }
-                /*} else {
-                    mAnswerSelectionView.setDisplayMode(LockPatternView.DisplayMode.Wrong);
-                    if (pattern.size() >= LockPatternUtils.MIN_PATTERN_REGISTER_FAIL) {
+                } else {
+                    mAnswerSelectionView.setDisplayIncorrectAnswer(answer);
+                    mAnswerSelectionView.disable();
+                    //if (pattern.size() >= LockPatternUtils.MIN_PATTERN_REGISTER_FAIL) {
                         mFailedPatternAttemptsSinceLastTimeout++;
-                        int retry = LockPatternUtils.FAILED_ATTEMPTS_BEFORE_TIMEOUT - mFailedPatternAttemptsSinceLastTimeout;
+                        /*int retry = LockPatternUtils.FAILED_ATTEMPTS_BEFORE_TIMEOUT - mFailedPatternAttemptsSinceLastTimeout;
                         if (retry >= 0) {
                             String format = getResources().getString(R.string.password_error_count);
                             mUnlockQuestionText.setText(format);
                             //TODO: click a pic of intruder
-                        }
-                    } else {
+                        }*/
+                    //} else {
 
                         //ToastUtil.showShort(getString(R.string.password_short));
-                    }
-                    if (mFailedPatternAttemptsSinceLastTimeout >= 3) {
-                        mAnswerSelectionView.postDelayed(mClearPatternRunnable, 500);
-                    }
-                    if (mFailedPatternAttemptsSinceLastTimeout >= LockPatternUtils.FAILED_ATTEMPTS_BEFORE_TIMEOUT) { // The number of failures is greater than the maximum number of error attempts before blocking the user
+                    //}
+                    //if (mFailedPatternAttemptsSinceLastTimeout >= 3) {
+                        mAnswerSelectionView.postDelayed(mClearPatternRunnable, 2000 * mFailedPatternAttemptsSinceLastTimeout);
+                    //}
+                    /*if (mFailedPatternAttemptsSinceLastTimeout >= LockPatternUtils.FAILED_ATTEMPTS_BEFORE_TIMEOUT) { // The number of failures is greater than the maximum number of error attempts before blocking the user
                         mAnswerSelectionView.postDelayed(mClearPatternRunnable, 500);
                     } else {
                         mAnswerSelectionView.postDelayed(mClearPatternRunnable, 500);
-                    }
-                }*/
+                    }*/
+                }
             }
         });
         //mAnswerSelectionView.setTactileFeedbackEnabled(true);
