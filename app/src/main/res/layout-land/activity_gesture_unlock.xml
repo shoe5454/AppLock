@@ -22,7 +22,7 @@
             android:gravity="center_horizontal"
             android:fontFamily="@font/kg_first_time_in_forever"
             android:textColor="@color/white"
-            android:textSize="20sp"
+            android:textSize="24sp"
             android:visibility="visible" />
 
         <ImageView
