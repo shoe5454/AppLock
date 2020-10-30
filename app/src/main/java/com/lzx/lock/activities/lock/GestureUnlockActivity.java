@@ -99,12 +99,22 @@ public class GestureUnlockActivity extends BaseActivity {
 
         executor.execute(() -> {
             AnswerDao dao = ((LockApplication)this.getApplication()).getDb().answerDao();
+            // Get a random answer to use as the correct answer
             int count = dao.getCount();
             int correctAnswerUid = new Random().nextInt(count) + 1;
             Answer correctAnswer = dao.getByUid(correctAnswerUid);
+            // Get all answers matching the type and subtype
+            List<Answer> allAnswers = null;
+            if (correctAnswer.subtype != null)
+                allAnswers = dao.getByTypeAndSubtypeOrderByUid(correctAnswer.type, correctAnswer.subtype);
+            else
+                allAnswers = dao.getByTypeOrderByUid(correctAnswer.type);
+            // Pick 3 random answers from the other answers
             List<Answer> otherAnswers = new ArrayList<>();
+            int lowestUid = otherAnswers.get(0).uid;
+            int highestUid = otherAnswers.get(otherAnswers.size() - 1).uid;
             while (otherAnswers.size() < 3) {
-                final int uid = new Random().nextInt(count) + 1;
+                final int uid = new Random().nextInt(highestUid - lowestUid + 1) + lowestUid;
                 if (uid != correctAnswer.uid && otherAnswers.stream().noneMatch((answer) -> answer.uid == uid)) {
                     Answer otherAnswer = dao.getByUid(uid);
                     otherAnswers.add(otherAnswer);
@@ -115,7 +125,7 @@ public class GestureUnlockActivity extends BaseActivity {
             });
         });
 
-        initLayoutBackground();
+        //initLayoutBackground();
         initAnswerSelectionView();
 
 
@@ -127,7 +137,7 @@ public class GestureUnlockActivity extends BaseActivity {
 
     }
 
-    private void initLayoutBackground() {
+    /*private void initLayoutBackground() {
         try {
             appInfo = packageManager.getApplicationInfo(pkgName, PackageManager.GET_UNINSTALLED_PACKAGES);
             if (appInfo != null) {
@@ -162,7 +172,7 @@ public class GestureUnlockActivity extends BaseActivity {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     private void initAnswerSelectionView() {
         //mAnswerSelectionView.setLineColorRight(0x80ffffff);

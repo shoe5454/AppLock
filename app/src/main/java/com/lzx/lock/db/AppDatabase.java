@@ -23,7 +23,8 @@ public abstract class AppDatabase extends RoomDatabase {
     private static void insert(SupportSQLiteDatabase db, AnswerType type, AnswerSubtype subtype, int imageResId, String text, boolean plural, boolean startsWithVowelSound) {
         ContentValues cv = new ContentValues();
         cv.put("type", type.ordinal());
-        cv.put("subtype", subtype.ordinal());
+        if (subtype != null)
+            cv.put("subtype", subtype.ordinal());
         cv.put("imageResId", imageResId);
         cv.put("text", text);
         cv.put("plural", plural);
@@ -46,8 +47,18 @@ public abstract class AppDatabase extends RoomDatabase {
                 insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.ANIMAL, R.drawable.question_pig, "pig", false, false);
                 insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.ANIMAL, R.drawable.question_shark, "shark", false, false);
                 insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.ANIMAL, R.drawable.question_whale, "whale", false, false);
-                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.ANIMAL, R.drawable.question_, "", false, false);
-                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.ANIMAL, R.drawable.question_, "", false, false);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.VEHICLE, R.drawable.question_boat, "boat", false, false);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.VEHICLE, R.drawable.question_bus, "bus", false, false);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.VEHICLE, R.drawable.question_car, "car", false, false);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.VEHICLE, R.drawable.question_train, "train", false, false);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.VEHICLE, R.drawable.question_truck, "truck", false, false);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.VEHICLE, R.drawable.question_airplane, "airplane", false, true);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.VEHICLE, R.drawable.question_bicycle, "bicycle", false, false);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.VEHICLE, R.drawable.question_rocket, "rocket", false, false);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.VEHICLE, R.drawable.question_helicopter, "helicopter", false, false);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.FOOD, R.drawable.question_egg, "egg", false, true);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.FOOD, R.drawable.question_ice_cream, "ice cream", false, true);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.FOOD, R.drawable.question_pizza, "pizza", false, false);
 
             }
         };
