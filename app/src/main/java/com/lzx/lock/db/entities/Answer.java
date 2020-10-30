@@ -10,10 +10,10 @@ public class Answer {
     public int uid;
 
     @ColumnInfo
-    public int type;
+    public Integer type;
 
     @ColumnInfo
-    public int subtype;
+    public Integer subtype;
 
     @ColumnInfo
     public int imageResId;

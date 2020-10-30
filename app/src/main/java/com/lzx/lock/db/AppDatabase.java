@@ -47,18 +47,18 @@ public abstract class AppDatabase extends RoomDatabase {
                 insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.ANIMAL, R.drawable.question_pig, "pig", false, false);
                 insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.ANIMAL, R.drawable.question_shark, "shark", false, false);
                 insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.ANIMAL, R.drawable.question_whale, "whale", false, false);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.VEHICLE, R.drawable.question_airplane, "airplane", false, true);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.VEHICLE, R.drawable.question_bicycle, "bicycle", false, false);
                 insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.VEHICLE, R.drawable.question_boat, "boat", false, false);
                 insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.VEHICLE, R.drawable.question_bus, "bus", false, false);
                 insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.VEHICLE, R.drawable.question_car, "car", false, false);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.VEHICLE, R.drawable.question_helicopter, "helicopter", false, false);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.VEHICLE, R.drawable.question_rocket, "rocket", false, false);
                 insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.VEHICLE, R.drawable.question_train, "train", false, false);
                 insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.VEHICLE, R.drawable.question_truck, "truck", false, false);
-                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.VEHICLE, R.drawable.question_airplane, "airplane", false, true);
-                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.VEHICLE, R.drawable.question_bicycle, "bicycle", false, false);
-                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.VEHICLE, R.drawable.question_rocket, "rocket", false, false);
-                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.VEHICLE, R.drawable.question_helicopter, "helicopter", false, false);
-                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.FOOD, R.drawable.question_egg, "egg", false, true);
-                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.FOOD, R.drawable.question_ice_cream, "ice cream", false, true);
-                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.FOOD, R.drawable.question_pizza, "pizza", false, false);
+                //insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.FOOD, R.drawable.question_egg, "egg", false, true);
+                //insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.FOOD, R.drawable.question_ice_cream, "ice cream", false, true);
+                //insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.FOOD, R.drawable.question_pizza, "pizza", false, false);
 
             }
         };
