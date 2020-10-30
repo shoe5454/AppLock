@@ -22,6 +22,7 @@ import android.text.TextUtils;
 import com.lzx.lock.LockApplication;
 import com.lzx.lock.activities.lock.GestureUnlockActivity;
 import com.lzx.lock.base.AppConstants;
+import com.lzx.lock.base.BaseActivity;
 import com.lzx.lock.db.CommLockInfoManager;
 import com.lzx.lock.receiver.LockRestarterBroadcastReceiver;
 import com.lzx.lock.utils.NotificationUtil;
@@ -30,6 +31,7 @@ import com.lzx.lock.utils.SpUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
+import java.util.concurrent.locks.Lock;
 
 
 public class LockService extends IntentService {
@@ -46,6 +48,7 @@ public class LockService extends IntentService {
     Timer timer = new Timer();
     //private boolean isLockTypeAccessibility;
     private long lastUnlockTimeSeconds = 0;
+    private long lastLockTimeSeconds = 0;
     private String lastUnlockPackageName = "";
     private boolean lockState;
     private ServiceReceiver mServiceReceiver;
@@ -99,7 +102,7 @@ public class LockService extends IntentService {
 
         while (threadIsTerminate) {
             String packageName = getLauncherTopApp(LockService.this, activityManager);
-            if (lockState && !TextUtils.isEmpty(packageName) && !inWhiteList(packageName)) {
+            if (lockState && !TextUtils.isEmpty(packageName)/* && !inWhiteList(packageName)*/) {
                 boolean isLockOffScreenTime = SpUtil.getInstance().getBoolean(AppConstants.LOCK_AUTO_SCREEN_TIME, false);
                 boolean isLockOffScreen = SpUtil.getInstance().getBoolean(AppConstants.LOCK_AUTO_SCREEN, false);
                 savePkgName = SpUtil.getInstance().getString(AppConstants.LOCK_LAST_LOAD_PKG_NAME, "");
@@ -161,6 +164,13 @@ public class LockService extends IntentService {
                     continue;
                 }
             }
+            if (lockState &&
+                    lastUnlockTimeSeconds != 0 &&
+                    System.currentTimeMillis() - lastUnlockTimeSeconds >= 600000 && // Last lock is more than 10 minutes ago
+                    lastLockTimeSeconds < lastUnlockTimeSeconds) {
+                passwordLock(packageName);
+                continue;
+            }
             try {
                 Thread.sleep(210);
             } catch (Exception ignore) {
@@ -212,6 +222,7 @@ public class LockService extends IntentService {
     }
 
     private void passwordLock(String packageName) {
+        lastLockTimeSeconds = System.currentTimeMillis();
         LockApplication.getInstance().clearAllActivity();
         Intent intent = new Intent(this, GestureUnlockActivity.class);
 
