@@ -166,7 +166,7 @@ public class LockService extends IntentService {
             }
             if (lockState &&
                     lastUnlockTimeSeconds != 0 &&
-                    System.currentTimeMillis() - lastUnlockTimeSeconds >= 600000 && // Last lock is more than 10 minutes ago
+                    System.currentTimeMillis() - lastUnlockTimeSeconds >= (60000 * 9) && // Last lock is more than 9 minutes ago
                     lastLockTimeSeconds < lastUnlockTimeSeconds) {
                 passwordLock(packageName);
                 continue;

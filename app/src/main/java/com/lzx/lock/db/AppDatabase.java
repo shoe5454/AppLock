@@ -20,106 +20,35 @@ import com.lzx.lock.db.entities.AnswerType;
 public abstract class AppDatabase extends RoomDatabase {
     public abstract AnswerDao answerDao();
 
+    private static void insert(SupportSQLiteDatabase db, AnswerType type, AnswerSubtype subtype, int imageResId, String text, boolean plural, boolean startsWithVowelSound) {
+        ContentValues cv = new ContentValues();
+        cv.put("type", type.ordinal());
+        cv.put("subtype", subtype.ordinal());
+        cv.put("imageResId", imageResId);
+        cv.put("text", text);
+        cv.put("plural", plural);
+        cv.put("startsWithVowelSound", startsWithVowelSound);
+        db.insert("answer", SQLiteDatabase.CONFLICT_NONE, cv);
+    }
+
     public static AppDatabase populate(Context applicationContext) {
         RoomDatabase.Callback rdc = new RoomDatabase.Callback() {
             public void onCreate (SupportSQLiteDatabase db) {
-                ContentValues cv = new ContentValues();
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.ANIMAL, R.drawable.question_bird, "bird", false, false);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.ANIMAL, R.drawable.question_cat, "cat", false, false);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.ANIMAL, R.drawable.question_dog, "dog", false, false);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.ANIMAL, R.drawable.question_duck, "duck", false, false);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.ANIMAL, R.drawable.question_elephant, "elephant", false, true);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.ANIMAL, R.drawable.question_fish, "fish", false, false);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.ANIMAL, R.drawable.question_horse, "horse", false, false);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.ANIMAL, R.drawable.question_lion, "lion", false, false);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.ANIMAL, R.drawable.question_owl, "owl", false, true);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.ANIMAL, R.drawable.question_pig, "pig", false, false);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.ANIMAL, R.drawable.question_shark, "shark", false, false);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.ANIMAL, R.drawable.question_whale, "whale", false, false);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.ANIMAL, R.drawable.question_, "", false, false);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.ANIMAL, R.drawable.question_, "", false, false);
 
-                cv.put("type", AnswerType.THING_IDENTIFICATION.ordinal());
-                cv.put("subtype", AnswerSubtype.ANIMAL.ordinal());
-                cv.put("imageResId", R.drawable.question_cat);
-                cv.put("text", "cat");
-                cv.put("plural", false);
-                cv.put("startsWithVowelSound", false);
-                db.insert("answer", SQLiteDatabase.CONFLICT_NONE, cv);
-
-                cv.put("type", AnswerType.THING_IDENTIFICATION.ordinal());
-                cv.put("subtype", AnswerSubtype.ANIMAL.ordinal());
-                cv.put("imageResId", R.drawable.question_dog);
-                cv.put("text", "dog");
-                cv.put("plural", false);
-                cv.put("startsWithVowelSound", false);
-                db.insert("answer", SQLiteDatabase.CONFLICT_NONE, cv);
-
-                cv.put("type", AnswerType.THING_IDENTIFICATION.ordinal());
-                cv.put("subtype", AnswerSubtype.ANIMAL.ordinal());
-                cv.put("imageResId", R.drawable.question_fish);
-                cv.put("text", "fish");
-                cv.put("plural", false);
-                cv.put("startsWithVowelSound", false);
-                db.insert("answer", SQLiteDatabase.CONFLICT_NONE, cv);
-
-                cv.put("type", AnswerType.THING_IDENTIFICATION.ordinal());
-                cv.put("subtype", AnswerSubtype.ANIMAL.ordinal());
-                cv.put("imageResId", R.drawable.question_duck);
-                cv.put("text", "duck");
-                cv.put("plural", false);
-                cv.put("startsWithVowelSound", false);
-                db.insert("answer", SQLiteDatabase.CONFLICT_NONE, cv);
-
-                cv.put("type", AnswerType.THING_IDENTIFICATION.ordinal());
-                cv.put("subtype", AnswerSubtype.ANIMAL.ordinal());
-                cv.put("imageResId", R.drawable.question_pig);
-                cv.put("text", "pig");
-                cv.put("plural", false);
-                cv.put("startsWithVowelSound", false);
-                db.insert("answer", SQLiteDatabase.CONFLICT_NONE, cv);
-
-                cv.put("type", AnswerType.THING_IDENTIFICATION.ordinal());
-                cv.put("subtype", AnswerSubtype.ANIMAL.ordinal());
-                cv.put("imageResId", R.drawable.question_horse);
-                cv.put("text", "horse");
-                cv.put("plural", false);
-                cv.put("startsWithVowelSound", false);
-                db.insert("answer", SQLiteDatabase.CONFLICT_NONE, cv);
-
-                cv.put("type", AnswerType.THING_IDENTIFICATION.ordinal());
-                cv.put("subtype", AnswerSubtype.ANIMAL.ordinal());
-                cv.put("imageResId", R.drawable.question_lion);
-                cv.put("text", "lion");
-                cv.put("plural", false);
-                cv.put("startsWithVowelSound", false);
-                db.insert("answer", SQLiteDatabase.CONFLICT_NONE, cv);
-
-                cv.put("type", AnswerType.THING_IDENTIFICATION.ordinal());
-                cv.put("subtype", AnswerSubtype.ANIMAL.ordinal());
-                cv.put("imageResId", R.drawable.question_elephant);
-                cv.put("text", "elephant");
-                cv.put("plural", false);
-                cv.put("startsWithVowelSound", true);
-                db.insert("answer", SQLiteDatabase.CONFLICT_NONE, cv);
-
-                cv.put("type", AnswerType.THING_IDENTIFICATION.ordinal());
-                cv.put("subtype", AnswerSubtype.ANIMAL.ordinal());
-                cv.put("imageResId", R.drawable.question_bird);
-                cv.put("text", "bird");
-                cv.put("plural", false);
-                cv.put("startsWithVowelSound", false);
-                db.insert("answer", SQLiteDatabase.CONFLICT_NONE, cv);
-
-                cv.put("type", AnswerType.THING_IDENTIFICATION.ordinal());
-                cv.put("subtype", AnswerSubtype.ANIMAL.ordinal());
-                cv.put("imageResId", R.drawable.question_whale);
-                cv.put("text", "whale");
-                cv.put("plural", false);
-                cv.put("startsWithVowelSound", false);
-                db.insert("answer", SQLiteDatabase.CONFLICT_NONE, cv);
-
-                cv.put("type", AnswerType.THING_IDENTIFICATION.ordinal());
-                cv.put("subtype", AnswerSubtype.ANIMAL.ordinal());
-                cv.put("imageResId", R.drawable.question_shark);
-                cv.put("text", "shark");
-                cv.put("plural", false);
-                cv.put("startsWithVowelSound", false);
-                db.insert("answer", SQLiteDatabase.CONFLICT_NONE, cv);
-
-                cv.put("type", AnswerType.THING_IDENTIFICATION.ordinal());
-                cv.put("subtype", AnswerSubtype.ANIMAL.ordinal());
-                cv.put("imageResId", R.drawable.question_owl);
-                cv.put("text", "owl");
-                cv.put("plural", false);
-                cv.put("startsWithVowelSound", true);
-                db.insert("answer", SQLiteDatabase.CONFLICT_NONE, cv);
             }
         };
         return Room.databaseBuilder(applicationContext, AppDatabase.class, "reading-lock")
