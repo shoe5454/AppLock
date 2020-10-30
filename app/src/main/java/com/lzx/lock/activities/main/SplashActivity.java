@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import com.lzx.lock.R;
 import com.lzx.lock.base.AppConstants;
 import com.lzx.lock.base.BaseActivity;
-import com.lzx.lock.activities.pwd.CreatePwdActivity;
 import com.lzx.lock.services.BackgroundManager;
 import com.lzx.lock.services.LoadAppListService;
 import com.lzx.lock.services.LockService;
@@ -85,7 +84,7 @@ public class SplashActivity extends BaseActivity {
 
     private void showDialog() {
         // If you do not have access to view usage rights and the phone exists to view usage this interface
-        //if (!LockUtil.isStatAccessPermissionSet(SplashActivity.this) && LockUtil.isNoOption(SplashActivity.this)) {
+        if (!LockUtil.isStatAccessPermissionSet(SplashActivity.this) && LockUtil.isNoOption(SplashActivity.this)) {
             DialogPermission dialog = new DialogPermission(SplashActivity.this);
             dialog.show();
             dialog.setOnClickListener(new DialogPermission.onClickListener() {
@@ -98,9 +97,9 @@ public class SplashActivity extends BaseActivity {
                     }
                 }
             });
-        //} else {
-        //    gotoCreatePwdActivity();
-        //}
+        } else {
+            gotoLockMainActivity();
+        }
 
     }
 
@@ -109,14 +108,14 @@ public class SplashActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RESULT_ACTION_USAGE_ACCESS_SETTINGS) {
             if (LockUtil.isStatAccessPermissionSet(SplashActivity.this)) {
-                gotoCreatePwdActivity();
+                gotoLockMainActivity();
             } else {
                 ToastUtil.showToast("Permission denied");
                 finish();
             }
         }
         if (requestCode == RESULT_ACTION_ACCESSIBILITY_SETTINGS) {
-            gotoCreatePwdActivity();
+            gotoLockMainActivity();
         }
     }
 
@@ -144,11 +143,19 @@ public class SplashActivity extends BaseActivity {
         return false;
     }
 
-    private void gotoCreatePwdActivity() {
+    /*private void gotoCreatePwdActivity() {
         Intent intent2 = new Intent(SplashActivity.this, CreatePwdActivity.class);
         startActivity(intent2);
         finish();
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+    }*/
+
+    private void gotoLockMainActivity() {
+        SpUtil.getInstance().putBoolean(AppConstants.LOCK_STATE, true);
+        BackgroundManager.getInstance().init(this).startService(LockService.class);
+        SpUtil.getInstance().putBoolean(AppConstants.LOCK_IS_FIRST_LOCK, false);
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
     }
 
     @Override
