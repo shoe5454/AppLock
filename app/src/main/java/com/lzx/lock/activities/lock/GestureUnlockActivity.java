@@ -111,12 +111,12 @@ public class GestureUnlockActivity extends BaseActivity {
                 allAnswers = dao.getByTypeOrderByUid(correctAnswer.type);
             // Pick 3 random answers from the other answers
             List<Answer> otherAnswers = new ArrayList<>();
-            int lowestUid = allAnswers.get(0).uid;
-            int highestUid = allAnswers.get(allAnswers.size() - 1).uid;
+            int lowestIndex = 0;
+            int highestIndex = allAnswers.size() - 1;
             while (otherAnswers.size() < 3) {
-                final int uid = new Random().nextInt(highestUid - lowestUid + 1) + lowestUid;
-                if (uid != correctAnswer.uid && otherAnswers.stream().noneMatch((answer) -> answer.uid == uid)) {
-                    Answer otherAnswer = dao.getByUid(uid);
+                final int index = new Random().nextInt(highestIndex - lowestIndex + 1) + lowestIndex;
+                Answer otherAnswer = otherAnswers.get(index);
+                if (otherAnswer.uid != correctAnswer.uid && otherAnswers.stream().noneMatch((answer) -> answer.uid == otherAnswer.uid)) {
                     otherAnswers.add(otherAnswer);
                 }
             }
