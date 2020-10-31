@@ -18,8 +18,8 @@ public interface AnswerDao {
     @Query("SELECT * FROM answer")
     List<Answer> getAll();
 
-    @Query("SELECT * FROM answer ORDER BY score")
-    List<Answer> getAllOrderByScore();
+    @Query("SELECT * FROM answer WHERE currentMaxConsecutiveCorrectGuesses <= :currentMaxConsecutiveCorrectGuesses ORDER BY score, lowestScore")
+    List<Answer> getByMaxCurrentMaxConsecutiveCorrectGuessesOrderByScoreThenLowestScore(int currentMaxConsecutiveCorrectGuesses);
 
     @Query("SELECT * FROM answer WHERE uid = :uid")
     Answer getByUid(int uid);

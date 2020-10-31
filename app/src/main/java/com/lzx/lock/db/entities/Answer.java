@@ -38,6 +38,13 @@ public class Answer {
     @ColumnInfo
     public Long lowestScoreTimestamp;
 
+    @ColumnInfo
+    public int currentMaxConsecutiveCorrectGuesses;
+
+    @ColumnInfo
+    public Long lastCorrectGuessTimestamp;
+
+
     /*public Answer withType(AnswerType type, AnswerSubtype subtype) {
         this.type = type.ordinal();
         this.subtype = subtype.ordinal();

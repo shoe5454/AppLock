@@ -97,23 +97,13 @@ public class UnlockActivity extends BaseActivity {
         executor.execute(() -> {
             mWrongAnswersSelected.clear();
             AnswerDao dao = ((LockApplication)this.getApplication()).getDb().answerDao();
-            // Get answer with lowest score
-            List<Answer> allAnswers = dao.getAllOrderByScore();
+            // Get answer with lowest score and lowest lowestScore with <= 3 correct consecutive guesses
+            List<Answer> allAnswers = dao.getByMaxCurrentMaxConsecutiveCorrectGuessesOrderByScoreThenLowestScore(3);
             Answer correctAnswer = allAnswers.get(0);
             // Filter out answers which do not match type and subtype
             List<Answer> allOtherAnswers = allAnswers.stream().filter(answer -> {
                return answer.type == correctAnswer.type && (correctAnswer.subtype == null || answer.subtype == correctAnswer.subtype);
             }).collect(Collectors.toList());
-            /*// Get a random answer to use as the correct answer
-            int count = dao.getCount();
-            int correctAnswerUid = new Random().nextInt(count) + 1;
-            Answer correctAnswer = dao.getByUid(correctAnswerUid);
-            // Get all answers matching the type and subtype
-            List<Answer> allAnswers = null;
-            if (correctAnswer.subtype != null)
-                allAnswers = dao.getByTypeAndSubtype(correctAnswer.type, correctAnswer.subtype);
-            else
-                allAnswers = dao.getByType(correctAnswer.type);*/
             // Pick 3 random answers from the other answers
             List<Answer> otherAnswers = new ArrayList<>();
             int lowestIndex = 0;
@@ -252,7 +242,10 @@ public class UnlockActivity extends BaseActivity {
                             AnswerDao dao = ((LockApplication)UnlockActivity.this.getApplication()).getDb().answerDao();
                             if (mWrongAnswersSelected.isEmpty()) {
                                 mCorrectAnswer.score++;
+                                mCorrectAnswer.currentMaxConsecutiveCorrectGuesses++;
+                                mCorrectAnswer.lastCorrectGuessTimestamp = System.currentTimeMillis();
                             } else {
+                                mCorrectAnswer.currentMaxConsecutiveCorrectGuesses = 0;
                                 mCorrectAnswer.score--;
                                 if (mCorrectAnswer.score < mCorrectAnswer.lowestScore) {
                                     mCorrectAnswer.lowestScore = mCorrectAnswer.score;
