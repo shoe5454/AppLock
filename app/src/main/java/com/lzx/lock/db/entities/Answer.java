@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.sql.Timestamp;
+
 @Entity
 public class Answer {
     @PrimaryKey
@@ -29,6 +31,12 @@ public class Answer {
 
     @ColumnInfo
     public int score;
+
+    @ColumnInfo
+    public int lowestScore;
+
+    @ColumnInfo
+    public Long lowestScoreTimestamp;
 
     /*public Answer withType(AnswerType type, AnswerSubtype subtype) {
         this.type = type.ordinal();

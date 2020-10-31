@@ -28,6 +28,7 @@ public abstract class AppDatabase extends RoomDatabase {
         cv.put("text", text);
         cv.put("plural", plural);
         cv.put("score", 0);
+        cv.put("lowestScore", 0);
         db.insert("answer", SQLiteDatabase.CONFLICT_NONE, cv);
     }
 

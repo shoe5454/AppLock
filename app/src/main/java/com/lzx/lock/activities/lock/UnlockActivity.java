@@ -254,9 +254,17 @@ public class UnlockActivity extends BaseActivity {
                                 mCorrectAnswer.score++;
                             } else {
                                 mCorrectAnswer.score--;
+                                if (mCorrectAnswer.score < mCorrectAnswer.lowestScore) {
+                                    mCorrectAnswer.lowestScore = mCorrectAnswer.score;
+                                    mCorrectAnswer.lowestScoreTimestamp = System.currentTimeMillis();
+                                }
                                 Collection<Answer> toUpdates = mWrongAnswersSelected.values();
                                 for (Answer toUpdate : toUpdates) {
                                     toUpdate.score--;
+                                    if (toUpdate.score < toUpdate.lowestScore) {
+                                        toUpdate.lowestScore = toUpdate.score;
+                                        toUpdate.lowestScoreTimestamp = System.currentTimeMillis();
+                                    }
                                 }
                                 dao.updateAll(toUpdates);
                             }
