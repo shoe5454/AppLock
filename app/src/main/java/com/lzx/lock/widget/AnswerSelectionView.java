@@ -35,10 +35,7 @@ public class AnswerSelectionView extends LinearLayout {
         for (Answer answer : answers) {
             final Answer a = answer;
             Button myButton = new Button(this.getContext());
-            if (answer.startsWithVowelSound)
-                myButton.setText("An " + answer.text);
-            else
-                myButton.setText("A " + answer.text);
+            myButton.setText(answer.text);
             myButton.setTag(answer.uid);
             myButton.setTypeface(typeface);
             myButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 26f);

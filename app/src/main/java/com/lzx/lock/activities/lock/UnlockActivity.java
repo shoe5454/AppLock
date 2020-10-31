@@ -32,10 +32,13 @@ import com.lzx.lock.widget.AnswerSelectionView;
 import com.lzx.lock.widget.LockPatternViewPattern;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 /**
  * Created by xian on 2017/2/17.
@@ -61,6 +64,7 @@ public class UnlockActivity extends BaseActivity {
     //private Drawable iconDrawable;
     //private String appLabel;
     private Answer mCorrectAnswer;
+    private HashMap<Integer, Answer> mWrongAnswersSelected = new HashMap<>();
     @NonNull
     private Runnable mClearPatternRunnable = new Runnable() {
         public void run() {
@@ -91,8 +95,16 @@ public class UnlockActivity extends BaseActivity {
         mLockInfoManager = new CommLockInfoManager(this);
 
         executor.execute(() -> {
+            mWrongAnswersSelected.clear();
             AnswerDao dao = ((LockApplication)this.getApplication()).getDb().answerDao();
-            // Get a random answer to use as the correct answer
+            // Get answer with lowest score
+            List<Answer> allAnswers = dao.getAllOrderByScore();
+            Answer correctAnswer = allAnswers.get(0);
+            // Filter out answers which do not match type and subtype
+            List<Answer> allOtherAnswers = allAnswers.stream().filter(answer -> {
+               return answer.type == correctAnswer.type && (correctAnswer.subtype == null || answer.subtype == correctAnswer.subtype);
+            }).collect(Collectors.toList());
+            /*// Get a random answer to use as the correct answer
             int count = dao.getCount();
             int correctAnswerUid = new Random().nextInt(count) + 1;
             Answer correctAnswer = dao.getByUid(correctAnswerUid);
@@ -101,14 +113,14 @@ public class UnlockActivity extends BaseActivity {
             if (correctAnswer.subtype != null)
                 allAnswers = dao.getByTypeAndSubtype(correctAnswer.type, correctAnswer.subtype);
             else
-                allAnswers = dao.getByType(correctAnswer.type);
+                allAnswers = dao.getByType(correctAnswer.type);*/
             // Pick 3 random answers from the other answers
             List<Answer> otherAnswers = new ArrayList<>();
             int lowestIndex = 0;
-            int highestIndex = allAnswers.size() - 1;
+            int highestIndex = allOtherAnswers.size() - 1;
             while (otherAnswers.size() < 3) {
                 final int index = new Random().nextInt(highestIndex - lowestIndex + 1) + lowestIndex;
-                Answer otherAnswer = otherAnswers.get(index);
+                Answer otherAnswer = allOtherAnswers.get(index);
                 if (otherAnswer.uid != correctAnswer.uid && otherAnswers.stream().noneMatch((answer) -> answer.uid == otherAnswer.uid)) {
                     otherAnswers.add(otherAnswer);
                 }
@@ -236,10 +248,27 @@ public class UnlockActivity extends BaseActivity {
                         intent.putExtra(LockService.LOCK_SERVICE_LASTAPP, pkgName);
                         sendBroadcast(intent);
 
-                        mLockInfoManager.unlockCommApplication(pkgName);
-                        finish();
+                        executor.execute(() -> {
+                            AnswerDao dao = ((LockApplication)UnlockActivity.this.getApplication()).getDb().answerDao();
+                            if (mWrongAnswersSelected.isEmpty()) {
+                                mCorrectAnswer.score++;
+                            } else {
+                                mCorrectAnswer.score--;
+                                Collection<Answer> toUpdates = mWrongAnswersSelected.values();
+                                for (Answer toUpdate : toUpdates) {
+                                    toUpdate.score--;
+                                }
+                                dao.updateAll(toUpdates);
+                            }
+                            dao.update(mCorrectAnswer);
+                            new Handler(Looper.getMainLooper()).post(() -> {
+                                mLockInfoManager.unlockCommApplication(pkgName);
+                                finish();
+                            });
+                        });
                     }
                 } else {
+                    mWrongAnswersSelected.put(answer.uid, answer);
                     mAnswerSelectionView.setDisplayIncorrectAnswer(answer);
                     mAnswerSelectionView.disable();
                     //if (pattern.size() >= LockPatternUtils.MIN_PATTERN_REGISTER_FAIL) {

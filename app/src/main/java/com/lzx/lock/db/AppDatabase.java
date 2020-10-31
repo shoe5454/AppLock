@@ -7,13 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.lzx.lock.R;
 import com.lzx.lock.db.dao.AnswerDao;
 import com.lzx.lock.db.entities.Answer;
-import com.lzx.lock.db.entities.AnswerQuantifier;
 import com.lzx.lock.db.entities.AnswerSubtype;
 import com.lzx.lock.db.entities.AnswerType;
 
@@ -29,7 +27,7 @@ public abstract class AppDatabase extends RoomDatabase {
         cv.put("imageResId", imageResId);
         cv.put("text", text);
         cv.put("plural", plural);
-        //cv.put("quantifier", quantifier.ordinal());
+        cv.put("score", 0);
         db.insert("answer", SQLiteDatabase.CONFLICT_NONE, cv);
     }
 

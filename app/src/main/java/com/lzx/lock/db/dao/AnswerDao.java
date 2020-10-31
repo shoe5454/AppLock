@@ -3,9 +3,11 @@ package com.lzx.lock.db.dao;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.lzx.lock.db.entities.Answer;
 
+import java.util.Collection;
 import java.util.List;
 
 @Dao
@@ -15,6 +17,9 @@ public interface AnswerDao {
 
     @Query("SELECT * FROM answer")
     List<Answer> getAll();
+
+    @Query("SELECT * FROM answer ORDER BY score")
+    List<Answer> getAllOrderByScore();
 
     @Query("SELECT * FROM answer WHERE uid = :uid")
     Answer getByUid(int uid);
@@ -30,4 +35,10 @@ public interface AnswerDao {
 
     @Insert
     public Long insert(Answer answer);
+
+    @Update
+    public void update(Answer answer);
+
+    @Update
+    public int updateAll(Collection<Answer> answers);
 }
