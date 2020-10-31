@@ -1,18 +1,8 @@
 package com.lzx.lock;
 
-import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
-
-import androidx.room.Room;
-import androidx.room.RoomDatabase;
-import androidx.sqlite.db.SupportSQLiteDatabase;
-
 import com.lzx.lock.base.BaseActivity;
-import com.lzx.lock.activities.lock.GestureUnlockActivity;
+import com.lzx.lock.activities.lock.UnlockActivity;
 import com.lzx.lock.db.AppDatabase;
-import com.lzx.lock.db.entities.Answer;
-import com.lzx.lock.db.entities.AnswerSubtype;
-import com.lzx.lock.db.entities.AnswerType;
 import com.lzx.lock.utils.SpUtil;
 
 import org.litepal.LitePalApplication;
@@ -71,6 +61,6 @@ public class LockApplication extends LitePalApplication {
     }
 
     private boolean clearAllWhiteList(BaseActivity activity) {
-        return activity instanceof GestureUnlockActivity;
+        return activity instanceof UnlockActivity;
     }
 }

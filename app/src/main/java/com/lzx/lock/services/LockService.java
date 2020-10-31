@@ -20,9 +20,8 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.lzx.lock.LockApplication;
-import com.lzx.lock.activities.lock.GestureUnlockActivity;
+import com.lzx.lock.activities.lock.UnlockActivity;
 import com.lzx.lock.base.AppConstants;
-import com.lzx.lock.base.BaseActivity;
 import com.lzx.lock.db.CommLockInfoManager;
 import com.lzx.lock.receiver.LockRestarterBroadcastReceiver;
 import com.lzx.lock.utils.NotificationUtil;
@@ -31,7 +30,6 @@ import com.lzx.lock.utils.SpUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
-import java.util.concurrent.locks.Lock;
 
 
 public class LockService extends IntentService {
@@ -224,7 +222,7 @@ public class LockService extends IntentService {
     private void passwordLock(String packageName) {
         lastLockTimeSeconds = System.currentTimeMillis();
         LockApplication.getInstance().clearAllActivity();
-        Intent intent = new Intent(this, GestureUnlockActivity.class);
+        Intent intent = new Intent(this, UnlockActivity.class);
 
         intent.putExtra(AppConstants.LOCK_PACKAGE_NAME, packageName);
         intent.putExtra(AppConstants.LOCK_FROM, AppConstants.LOCK_FROM_FINISH);

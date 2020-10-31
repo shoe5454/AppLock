@@ -6,16 +6,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.view.Display;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -42,13 +37,11 @@ import java.util.Random;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import io.github.subhamtyagi.crashreporter.CrashReporter;
-
 /**
  * Created by xian on 2017/2/17.
  */
 
-public class GestureUnlockActivity extends BaseActivity {
+public class UnlockActivity extends BaseActivity {
 
     public static final String FINISH_UNLOCK_THIS_APP = "finish_unlock_this_app";
     private final Executor executor = Executors.newSingleThreadExecutor();
@@ -161,7 +154,7 @@ public class GestureUnlockActivity extends BaseActivity {
                                 }
                                 Bitmap bmp = LockUtil.drawableToBitmap(icon, width, height);
                                 try {
-                                    LockUtil.blur(GestureUnlockActivity.this, LockUtil.big(bmp), mUnLockLayout, width, height);
+                                    LockUtil.blur(UnlockActivity.this, LockUtil.big(bmp), mUnLockLayout, width, height);
                                 } catch (IllegalArgumentException ignore) {
                                     CrashReporter.logException(ignore);
                                 }
@@ -184,7 +177,7 @@ public class GestureUnlockActivity extends BaseActivity {
                 if (mLockPatternUtils.checkPattern(pattern)) { //
                     mAnswerSelectionView.setDisplayMode(LockPatternView.DisplayMode.Correct);
                     if (actionFrom.equals(AppConstants.LOCK_FROM_LOCK_MAIN_ACITVITY)) {
-                        startActivity(new Intent(GestureUnlockActivity.this, MainActivity.class));
+                        startActivity(new Intent(UnlockActivity.this, MainActivity.class));
                         finish();
                     } else {
                         SpUtil.getInstance().putLong(AppConstants.LOCK_CURR_MILLISECONDS, System.currentTimeMillis());
@@ -231,7 +224,7 @@ public class GestureUnlockActivity extends BaseActivity {
                 if (mCorrectAnswer.uid == answer.uid) { //
                     mAnswerSelectionView.setDisplayCorrectAnswer(answer);
                     if (actionFrom.equals(AppConstants.LOCK_FROM_LOCK_MAIN_ACITVITY)) {
-                        startActivity(new Intent(GestureUnlockActivity.this, MainActivity.class));
+                        startActivity(new Intent(UnlockActivity.this, MainActivity.class));
                         finish();
                     } else {
                         SpUtil.getInstance().putLong(AppConstants.LOCK_CURR_MILLISECONDS, System.currentTimeMillis());
