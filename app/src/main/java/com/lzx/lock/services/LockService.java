@@ -100,7 +100,7 @@ public class LockService extends IntentService {
 
         while (threadIsTerminate) {
             String packageName = getLauncherTopApp(LockService.this, activityManager);
-            if (lockState && !TextUtils.isEmpty(packageName)/* && !inWhiteList(packageName)*/) {
+            if (lockState && !TextUtils.isEmpty(packageName) && !inWhiteList(packageName)) {
                 boolean isLockOffScreenTime = SpUtil.getInstance().getBoolean(AppConstants.LOCK_AUTO_SCREEN_TIME, false);
                 boolean isLockOffScreen = SpUtil.getInstance().getBoolean(AppConstants.LOCK_AUTO_SCREEN, false);
                 savePkgName = SpUtil.getInstance().getString(AppConstants.LOCK_LAST_LOAD_PKG_NAME, "");
