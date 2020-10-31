@@ -56,12 +56,12 @@ public abstract class AppDatabase extends RoomDatabase {
                 insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.VEHICLE, R.drawable.question_rocket, "A rocket", false);
                 insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.VEHICLE, R.drawable.question_train, "A train", false);
                 insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.VEHICLE, R.drawable.question_truck, "A truck", false);
-                //insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.FOOD, R.drawable.question_egg, "An egg", false, true);
-                //insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.FOOD, R.drawable.question_ice_cream, "Ice cream", false, true);
-                //insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.FOOD, R.drawable.question_pizza, "A pizza", false, false);
-                //insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.FOOD, R.drawable.question_milk, "Milk", false, false);
-                //        cheese
-                //        bread
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.FOOD, R.drawable.question_bread, "Bread", false);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.FOOD, R.drawable.question_cheese, "Cheese", false);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.FOOD, R.drawable.question_egg, "An egg", false);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.FOOD, R.drawable.question_ice_cream, "Ice cream", false);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.FOOD, R.drawable.question_milk, "Milk", false);
+                insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.FOOD, R.drawable.question_pizza, "A pizza", false);
                 // banana
                 // family relationships
             }

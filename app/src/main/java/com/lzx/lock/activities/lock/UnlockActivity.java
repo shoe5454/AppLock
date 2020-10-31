@@ -299,7 +299,7 @@ public class UnlockActivity extends BaseActivity {
 
     private void updateAnswerSelectionView(Answer correctAnswer, List<Answer> otherAnswers) {
         mCorrectAnswer = correctAnswer;
-        mUnlockQuestionText.setText("What is this " + AnswerSubtype.values()[mCorrectAnswer.subtype].name().toLowerCase() + "?");
+        mUnlockQuestionText.setText("What " + AnswerSubtype.values()[mCorrectAnswer.subtype].name().toLowerCase() + " is this?");
         mUnLockQuestionImage.setImageResource(mCorrectAnswer.imageResId);
         List<Answer> answers = new ArrayList<>();
         answers.add(mCorrectAnswer);
