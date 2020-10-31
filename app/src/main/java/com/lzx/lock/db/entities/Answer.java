@@ -10,7 +10,7 @@ public class Answer {
     public int uid;
 
     @ColumnInfo
-    public Integer type;
+    public int type;
 
     @ColumnInfo
     public Integer subtype;
@@ -24,8 +24,11 @@ public class Answer {
     @ColumnInfo
     public boolean plural;
 
+    //@ColumnInfo
+    //public int quantifier;
+
     @ColumnInfo
-    public boolean startsWithVowelSound;
+    public int score;
 
     /*public Answer withType(AnswerType type, AnswerSubtype subtype) {
         this.type = type.ordinal();
