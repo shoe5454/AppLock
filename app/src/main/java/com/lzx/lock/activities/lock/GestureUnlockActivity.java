@@ -106,9 +106,9 @@ public class GestureUnlockActivity extends BaseActivity {
             // Get all answers matching the type and subtype
             List<Answer> allAnswers = null;
             if (correctAnswer.subtype != null)
-                allAnswers = dao.getByTypeAndSubtypeOrderByUid(correctAnswer.type, correctAnswer.subtype);
+                allAnswers = dao.getByTypeAndSubtype(correctAnswer.type, correctAnswer.subtype);
             else
-                allAnswers = dao.getByTypeOrderByUid(correctAnswer.type);
+                allAnswers = dao.getByType(correctAnswer.type);
             // Pick 3 random answers from the other answers
             List<Answer> otherAnswers = new ArrayList<>();
             int lowestIndex = 0;

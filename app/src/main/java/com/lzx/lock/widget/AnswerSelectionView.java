@@ -41,7 +41,7 @@ public class AnswerSelectionView extends LinearLayout {
                 myButton.setText("A " + answer.text);
             myButton.setTag(answer.uid);
             myButton.setTypeface(typeface);
-            myButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f);
+            myButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 26f);
             myButton.setTransformationMethod(null);
             myButton.setOnClickListener(new OnClickListener() {
                 @Override

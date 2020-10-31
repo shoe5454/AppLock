@@ -19,11 +19,11 @@ public interface AnswerDao {
     @Query("SELECT * FROM answer WHERE uid = :uid")
     Answer getByUid(int uid);
 
-    @Query("SELECT * FROM answer WHERE type = :type ORDER BY uid")
-    List<Answer> getByTypeOrderByUid(Integer type);
+    @Query("SELECT * FROM answer WHERE type = :type")
+    List<Answer> getByType(Integer type);
 
-    @Query("SELECT * FROM answer WHERE type = :type AND subtype = :subtype ORDER BY uid")
-    List<Answer> getByTypeAndSubtypeOrderByUid(Integer type, Integer subtype);
+    @Query("SELECT * FROM answer WHERE type = :type AND subtype = :subtype")
+    List<Answer> getByTypeAndSubtype(Integer type, Integer subtype);
 
     @Insert
     void insertAll(Answer... answers);
