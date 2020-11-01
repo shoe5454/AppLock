@@ -142,6 +142,7 @@ public class LoadAppListService extends IntentService {
        // packageList.add("com.android.settings");
         packageList.add("com.android.dialer");
         packageList.add("com.android.camera");
+        packageList.add("com.android.chrome");
         //......
 
         //google apps
@@ -149,6 +150,7 @@ public class LoadAppListService extends IntentService {
         packageList.add("com.google.android.gm");
         packageList.add("com.google.android.youtube");
         packageList.add("com.google.android.apps.tachyon");//duo
+        packageList.add("com.google.android.apps.youtube.kids");
 
         //social app
         packageList.add("org.thoughtcrime.securesms");//signal
