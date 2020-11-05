@@ -19,8 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:gravity="center_horizontal"
             android:fontFamily="@font/kg_first_time_in_forever"
+            android:gravity="center_horizontal"
             android:textColor="@color/white"
             android:textSize="28sp"
             android:visibility="visible" />
@@ -30,19 +30,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/unlock_question_text"
-            android:layout_marginTop="5dp"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
             android:scaleType="fitCenter"
             android:src="@mipmap/ic_launcher"
             android:visibility="visible" />
 
 
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="8"
+        android:layout_weight="6"
         android:orientation="vertical">
+
         <com.lzx.lock.widget.AnswerSelectionView
             android:id="@+id/unlock_answer_selection"
             android:layout_width="match_parent"
@@ -50,9 +52,15 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="40dp"
-            android:orientation="vertical"/>
+            android:orientation="vertical" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:orientation="vertical">
+    </LinearLayout>
 </LinearLayout>
 
 
