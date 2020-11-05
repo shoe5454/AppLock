@@ -55,9 +55,30 @@ public abstract class AppDatabase extends RoomDatabase {
         @Override
         public void migrate(SupportSQLiteDatabase db) {
             insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.FOOD, R.drawable.question_cake, "A cake", false);
+            insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.FOOD, R.drawable.question_chocolate, "Chocolate", false);
+            insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.BODY_PART, R.drawable.question_nose, "Nose", false);
+            insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.BODY_PART, R.drawable.question_mouth, "Mouth", false);
+            insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.BODY_PART, R.drawable.question_eye, "Eye", false);
+            insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.BODY_PART, R.drawable.question_ear, "Ear", false);
+            insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.BODY_PART, R.drawable.question_hair, "Hair", false);
+            insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.BODY_PART, R.drawable.question_hand, "Hand", false);
+            insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.BODY_PART, R.drawable.question_leg, "Leg", false);
+            insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.BODY_PART, R.drawable.question_foot, "Foot", false);
+        }
+    };
+
+    static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(SupportSQLiteDatabase db) {
+            /*insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.BODY_PART, R.drawable.question_head, "Head", false);
+            insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.RELATIONSHIP, R.drawable.question_my_mother, "My mother", false);
+            insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.RELATIONSHIP, R.drawable.question_my_father, "My father", false);
+            insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.RELATIONSHIP, R.drawable.question_my_brother, "My brother", false);
+            insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.RELATIONSHIP, R.drawable.question_me, "Me", false);*/
             // banana
-            // family relationships
+            // family relationships, my mother, my father,
             // bee
+            // body parts
         }
     };
 

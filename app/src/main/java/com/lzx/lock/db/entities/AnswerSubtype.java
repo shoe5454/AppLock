@@ -6,6 +6,8 @@ public enum AnswerSubtype {
     VEHICLE,
     FRUIT,
     FOOD,
+    BODY_PART,
+    RELATIONSHIP
 
     // COLOR_IDENTIFICATION
 }

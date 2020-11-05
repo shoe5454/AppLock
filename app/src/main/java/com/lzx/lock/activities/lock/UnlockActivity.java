@@ -99,20 +99,33 @@ public class UnlockActivity extends BaseActivity {
             AnswerDao dao = ((LockApplication)this.getApplication()).getDb().answerDao();
             // Get answer with lowest score and lowest lowestScore with <= 3 correct consecutive guesses
             List<Answer> allAnswers = dao.getByMaxCurrentMaxConsecutiveCorrectGuessesOrderByScoreThenLowestScore(3);
+            if (allAnswers.isEmpty()) {
+                allAnswers = dao.getOrderByScoreThenLowestScore();
+            }
             Answer correctAnswer = allAnswers.get(0);
-            // Filter out answers which do not match type and subtype
+            // Remove answers which do not match type and subtype, and remove the correct answer
             List<Answer> allOtherAnswers = allAnswers.stream().filter(answer -> {
-               return answer.type == correctAnswer.type && (correctAnswer.subtype == null || answer.subtype == correctAnswer.subtype);
+               return answer.type == correctAnswer.type && (correctAnswer.subtype == null || answer.subtype == correctAnswer.subtype) && answer.uid != correctAnswer.uid;
             }).collect(Collectors.toList());
             // Pick 3 random answers from the other answers
             List<Answer> otherAnswers = new ArrayList<>();
-            int lowestIndex = 0;
-            int highestIndex = allOtherAnswers.size() - 1;
-            while (otherAnswers.size() < 3) {
-                final int index = new Random().nextInt(highestIndex - lowestIndex + 1) + lowestIndex;
-                Answer otherAnswer = allOtherAnswers.get(index);
-                if (otherAnswer.uid != correctAnswer.uid && otherAnswers.stream().noneMatch((answer) -> answer.uid == otherAnswer.uid)) {
-                    otherAnswers.add(otherAnswer);
+            if (allOtherAnswers.size() == 3) {
+                otherAnswers.addAll(allOtherAnswers);
+            } else {
+                if (allOtherAnswers.size() < 3) {
+                    if (correctAnswer.subtype == null)
+                        allOtherAnswers = dao.getByTypeAndUidNotEquals(correctAnswer.type, correctAnswer.uid);
+                    else
+                        allOtherAnswers = dao.getByTypeAndSubtypeAndUidNotEquals(correctAnswer.type, correctAnswer.subtype, correctAnswer.uid);
+                }
+                int lowestIndex = 0;
+                int highestIndex = allOtherAnswers.size() - 1;
+                while (otherAnswers.size() < 3) {
+                    final int index = new Random().nextInt(highestIndex - lowestIndex + 1) + lowestIndex;
+                    Answer otherAnswer = allOtherAnswers.get(index);
+                    if (otherAnswers.stream().noneMatch((answer) -> answer.uid == otherAnswer.uid)) {
+                        otherAnswers.add(otherAnswer);
+                    }
                 }
             }
             new Handler(Looper.getMainLooper()).post(() -> {
@@ -300,7 +313,13 @@ public class UnlockActivity extends BaseActivity {
 
     private void updateAnswerSelectionView(Answer correctAnswer, List<Answer> otherAnswers) {
         mCorrectAnswer = correctAnswer;
-        mUnlockQuestionText.setText("What " + AnswerSubtype.values()[mCorrectAnswer.subtype].name().toLowerCase() + " is this?");
+        switch (AnswerSubtype.values()[mCorrectAnswer.subtype]) {
+            case BODY_PART:
+                mUnlockQuestionText.setText("What body part is this?");
+                break;
+            default:
+                mUnlockQuestionText.setText("What " + AnswerSubtype.values()[mCorrectAnswer.subtype].name().toLowerCase() + " is this?");
+        }
         mUnLockQuestionImage.setImageResource(mCorrectAnswer.imageResId);
         List<Answer> answers = new ArrayList<>();
         answers.add(mCorrectAnswer);
