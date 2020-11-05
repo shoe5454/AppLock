@@ -15,7 +15,7 @@
         android:layout_marginTop="15dp"
         android:gravity="center_horizontal"
         android:textColor="@color/white"
-        android:textSize="26sp"
+        android:textSize="28sp"
         android:fontFamily="@font/kg_first_time_in_forever"
         android:visibility="visible"/>
 

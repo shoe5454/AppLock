@@ -75,7 +75,7 @@ public class UnlockActivity extends BaseActivity {
 
     @Override
     public int getLayoutId() {
-        return R.layout.activity_gesture_unlock;
+        return R.layout.activity_unlock;
     }
 
     @Override
