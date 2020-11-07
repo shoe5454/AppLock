@@ -10,6 +10,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.lzx.lock.LockApplication;
 import com.lzx.lock.R;
 import com.lzx.lock.db.dao.AnswerDao;
 import com.lzx.lock.db.entities.Answer;
@@ -74,7 +75,10 @@ public abstract class AppDatabase extends RoomDatabase {
             insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.RELATIONSHIP, R.drawable.question_my_mother, "My mother", false);
             insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.RELATIONSHIP, R.drawable.question_my_father, "My father", false);
             insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.RELATIONSHIP, R.drawable.question_my_brother, "My brother", false);
-            insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.RELATIONSHIP, R.drawable.question_me, "Me", false);*/
+            insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.RELATIONSHIP, R.drawable.question_me, "Me", false);
+            insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.RELATIONSHIP, R.drawable.question_my_grandmother1, "My grandmother", false);
+            insert(db, AnswerType.THING_IDENTIFICATION, AnswerSubtype.RELATIONSHIP, R.drawable.question_my_grandmother2, "My grandmother", false);
+            */
             // banana
             // family relationships, my mother, my father,
             // bee
@@ -87,7 +91,7 @@ public abstract class AppDatabase extends RoomDatabase {
         cv.put("type", type.ordinal());
         if (subtype != null)
             cv.put("subtype", subtype.ordinal());
-        cv.put("imageResId", imageResId);
+        cv.put("imageResName", LockApplication.getInstance().getResources().getResourceEntryName(imageResId));
         cv.put("text", text);
         cv.put("plural", plural);
         cv.put("score", 0);

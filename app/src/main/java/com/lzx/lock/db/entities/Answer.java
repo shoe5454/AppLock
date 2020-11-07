@@ -18,7 +18,7 @@ public class Answer {
     public Integer subtype;
 
     @ColumnInfo
-    public int imageResId;
+    public String imageResName;
 
     @ColumnInfo
     public String text;
