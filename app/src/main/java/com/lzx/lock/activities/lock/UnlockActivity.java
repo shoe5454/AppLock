@@ -320,7 +320,7 @@ public class UnlockActivity extends BaseActivity {
             default:
                 mUnlockQuestionText.setText("What " + AnswerSubtype.values()[mCorrectAnswer.subtype].name().toLowerCase() + " is this?");
         }
-        int resId = getResources().getIdentifier("question_bird", "drawable", getPackageName());
+        int resId = getResources().getIdentifier(mCorrectAnswer.imageResName, "drawable", getPackageName());
         mUnLockQuestionImage.setImageResource(resId);
         List<Answer> answers = new ArrayList<>();
         answers.add(mCorrectAnswer);
