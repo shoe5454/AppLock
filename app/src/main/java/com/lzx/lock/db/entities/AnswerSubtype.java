@@ -1,13 +1,13 @@
 package com.lzx.lock.db.entities;
 
 public enum AnswerSubtype {
-    // THING_IDENTIFICATION
+    // NOUN_IDENTIFICATION
     ANIMAL,
     VEHICLE,
     FRUIT,
     FOOD,
     BODY_PART,
-    RELATIONSHIP
+    PERSON_DESCRIPTION;
 
     // COLOR_IDENTIFICATION
 }

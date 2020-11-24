@@ -71,6 +71,25 @@ public abstract class AppDatabase extends RoomDatabase {
     static final Migration MIGRATION_2_3 = new Migration(2, 3) {
         @Override
         public void migrate(SupportSQLiteDatabase db) {
+            insert(db, AnswerType.NOUN_IDENTIFICATION, AnswerSubtype.PERSON_DESCRIPTION, R.drawable.question_man, "A man", false);
+            insert(db, AnswerType.NOUN_IDENTIFICATION, AnswerSubtype.PERSON_DESCRIPTION, R.drawable.question_woman, "A woman", false);
+            insert(db, AnswerType.NOUN_IDENTIFICATION, AnswerSubtype.PERSON_DESCRIPTION, R.drawable.question_boy, "A boy", false);
+            insert(db, AnswerType.NOUN_IDENTIFICATION, AnswerSubtype.PERSON_DESCRIPTION, R.drawable.question_girl, "A girl", false);
+            insert(db, AnswerType.NOUN_IDENTIFICATION, null, R.drawable.question_ball, "A ball", false);
+            insert(db, AnswerType.NOUN_IDENTIFICATION, null, R.drawable.question_fan, "A fan", false);
+            insert(db, AnswerType.NOUN_IDENTIFICATION, null, R.drawable.question_tree, "A tree", false);
+        }
+    };
+
+    static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+        @Override
+        public void migrate(SupportSQLiteDatabase db) {
+            //insert(db, AnswerType.NOUN_IDENTIFICATION, AnswerSubtype.FRUIT, R.drawable.question_apple, "An apple", false);
+            //insert(db, AnswerType.NOUN_IDENTIFICATION, AnswerSubtype.FRUIT, R.drawable.question_banana, "A banana", false);
+            //insert(db, AnswerType.VERB_IDENTIFICATION, null, R.drawable.question_swim, "Swim", false);
+            //insert(db, AnswerType.NOUN_IDENTIFICATION, AnswerSubtype.INSECT, R.drawable.question_ant, "An ant", false);
+            //insert(db, AnswerType.NOUN_IDENTIFICATION, AnswerSubtype.INSECT, R.drawable.question_bee, "A bee", false);
+            //insert(db, AnswerType.NOUN_IDENTIFICATION, AnswerSubtype.INSECT, R.drawable.question_spider, "A spider", false);
             //insert(db, AnswerType.NOUN_IDENTIFICATION, AnswerSubtype.BODY_PART, R.drawable.question_head, "Head", false);
             /*insert(db, AnswerType.NOUN_IDENTIFICATION, AnswerSubtype.RELATIONSHIP, R.drawable.question_my_mother, "My mother", false);
             insert(db, AnswerType.NOUN_IDENTIFICATION, AnswerSubtype.RELATIONSHIP, R.drawable.question_my_father, "My father", false);
@@ -79,14 +98,9 @@ public abstract class AppDatabase extends RoomDatabase {
             insert(db, AnswerType.NOUN_IDENTIFICATION, AnswerSubtype.RELATIONSHIP, R.drawable.question_my_grandmother1, "My grandmother", false);
             insert(db, AnswerType.NOUN_IDENTIFICATION, AnswerSubtype.RELATIONSHIP, R.drawable.question_my_grandmother2, "My grandmother", false);
             */
-            // ball
-            // colors
-            // tree
-            // banana
+            //insert(db, AnswerType.ADJECTIVE_IDENTIFICATION, AnswerSubtype.COLOUR, R.drawable.question_yellow, "Yellow", false);
+            //insert(db, AnswerType.ADJECTIVE_IDENTIFICATION, AnswerSubtype.COLOUR, R.drawable.question_yellow, "Yellow", false);
             // family relationships, my mother, my father,
-            // bee
-            // body parts
-            // man woman boy girl
         }
     };
 
@@ -112,7 +126,7 @@ public abstract class AppDatabase extends RoomDatabase {
         };
         return Room.databaseBuilder(applicationContext, AppDatabase.class, "reading-lock")
                 .addCallback(rdc)
-                .addMigrations(MIGRATION_1_2)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                 .build();
     }
 }

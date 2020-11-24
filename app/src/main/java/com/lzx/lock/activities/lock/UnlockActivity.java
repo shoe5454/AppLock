@@ -23,6 +23,7 @@ import com.lzx.lock.db.CommLockInfoManager;
 import com.lzx.lock.db.dao.AnswerDao;
 import com.lzx.lock.db.entities.Answer;
 import com.lzx.lock.db.entities.AnswerSubtype;
+import com.lzx.lock.db.entities.AnswerType;
 import com.lzx.lock.services.LockService;
 import com.lzx.lock.utils.LockPatternUtils;
 import com.lzx.lock.utils.LockUtil;
@@ -103,33 +104,17 @@ public class UnlockActivity extends BaseActivity {
                 allAnswers = dao.getOrderByScoreThenLowestScore();
             }
             Answer correctAnswer = allAnswers.get(0);
-            // Remove answers which do not match type and subtype, and remove the correct answer
-            List<Answer> allOtherAnswers = allAnswers.stream().filter(answer -> {
-               return answer.type == correctAnswer.type && (correctAnswer.subtype == null || answer.subtype == correctAnswer.subtype) && answer.uid != correctAnswer.uid;
-            }).collect(Collectors.toList());
-            // Pick 3 random answers from the other answers
             List<Answer> otherAnswers = new ArrayList<>();
-            if (allOtherAnswers.size() == 3) {
-                otherAnswers.addAll(allOtherAnswers);
-            } else {
-                if (allOtherAnswers.size() < 3) {
-                    if (correctAnswer.subtype == null)
-                        allOtherAnswers = dao.getByTypeAndUidNotEquals(correctAnswer.type, correctAnswer.uid);
-                    else
-                        allOtherAnswers = dao.getByTypeAndSubtypeAndUidNotEquals(correctAnswer.type, correctAnswer.subtype, correctAnswer.uid);
-                }
-                int lowestIndex = 0;
-                int highestIndex = allOtherAnswers.size() - 1;
-                while (otherAnswers.size() < 3) {
-                    final int index = new Random().nextInt(highestIndex - lowestIndex + 1) + lowestIndex;
-                    Answer otherAnswer = allOtherAnswers.get(index);
-                    if (otherAnswers.stream().noneMatch((answer) -> answer.uid == otherAnswer.uid)) {
-                        otherAnswers.add(otherAnswer);
-                    }
-                }
+            switch (AnswerType.values()[correctAnswer.type]) {
+                case NOUN_IDENTIFICATION:
+                    otherAnswers = initDataNounIdentification(dao, allAnswers, correctAnswer);
+                    break;
+                case ADJECTIVE_IDENTIFICATION:
+                    break;
             }
+            final List<Answer> otherAnswersFinal = otherAnswers;
             new Handler(Looper.getMainLooper()).post(() -> {
-               updateAnswerSelectionView(correctAnswer, otherAnswers);
+               updateAnswerSelectionView(correctAnswer, otherAnswersFinal);
             });
         });
 
@@ -142,7 +127,35 @@ public class UnlockActivity extends BaseActivity {
         //  filter.addAction(UnLockMenuPopWindow.UPDATE_LOCK_VIEW);
         filter.addAction(FINISH_UNLOCK_THIS_APP);
         registerReceiver(mGestureUnlockReceiver, filter);
+    }
 
+    private List<Answer> initDataNounIdentification(AnswerDao dao, List<Answer> allAnswers, Answer correctAnswer) {
+        // Remove answers which do not match type and subtype, and remove the correct answer
+        List<Answer> allOtherAnswers = allAnswers.stream().filter(answer -> {
+            return answer.type == correctAnswer.type && (correctAnswer.subtype == null || answer.subtype == correctAnswer.subtype) && answer.uid != correctAnswer.uid;
+        }).collect(Collectors.toList());
+        // Pick 3 random answers from the other answers
+        List<Answer> otherAnswers = new ArrayList<>();
+        if (allOtherAnswers.size() == 3) {
+            otherAnswers.addAll(allOtherAnswers);
+        } else {
+            if (allOtherAnswers.size() < 3) {
+                if (correctAnswer.subtype == null)
+                    allOtherAnswers = dao.getByTypeAndUidNotEquals(correctAnswer.type, correctAnswer.uid);
+                else
+                    allOtherAnswers = dao.getByTypeAndSubtypeAndUidNotEquals(correctAnswer.type, correctAnswer.subtype, correctAnswer.uid);
+            }
+            int lowestIndex = 0;
+            int highestIndex = allOtherAnswers.size() - 1;
+            while (otherAnswers.size() < 3) {
+                final int index = new Random().nextInt(highestIndex - lowestIndex + 1) + lowestIndex;
+                Answer otherAnswer = allOtherAnswers.get(index);
+                if (otherAnswers.stream().noneMatch((answer) -> answer.uid == otherAnswer.uid)) {
+                    otherAnswers.add(otherAnswer);
+                }
+            }
+        }
+        return otherAnswers;
     }
 
     /*private void initLayoutBackground() {
@@ -313,12 +326,25 @@ public class UnlockActivity extends BaseActivity {
 
     private void updateAnswerSelectionView(Answer correctAnswer, List<Answer> otherAnswers) {
         mCorrectAnswer = correctAnswer;
-        switch (AnswerSubtype.values()[mCorrectAnswer.subtype]) {
-            case BODY_PART:
-                mUnlockQuestionText.setText("What body part is this?");
+        switch (AnswerType.values()[mCorrectAnswer.type]) {
+            case NOUN_IDENTIFICATION:
+                if (mCorrectAnswer.subtype == null) {
+                    mUnlockQuestionText.setText("What is this?");
+                } else {
+                    switch (AnswerSubtype.values()[mCorrectAnswer.subtype]) {
+                        case BODY_PART:
+                            mUnlockQuestionText.setText("What body part is this?");
+                            break;
+                        case PERSON_DESCRIPTION:
+                            mUnlockQuestionText.setText("What is this?");
+                            break;
+                        default:
+                            mUnlockQuestionText.setText("What " + AnswerSubtype.values()[mCorrectAnswer.subtype].name().toLowerCase() + " is this?");
+                    }
+                }
                 break;
-            default:
-                mUnlockQuestionText.setText("What " + AnswerSubtype.values()[mCorrectAnswer.subtype].name().toLowerCase() + " is this?");
+            case ADJECTIVE_IDENTIFICATION:
+                break;
         }
         int resId = getResources().getIdentifier(mCorrectAnswer.imageResName, "drawable", getPackageName());
         mUnLockQuestionImage.setImageResource(resId);
