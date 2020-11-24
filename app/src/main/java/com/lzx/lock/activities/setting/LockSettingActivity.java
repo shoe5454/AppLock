@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lzx.lock.R;
-import com.lzx.lock.activities.about.AboutMeActivity;
 import com.lzx.lock.activities.lock.GestureCreateActivity;
 import com.lzx.lock.base.AppConstants;
 import com.lzx.lock.base.BaseActivity;
@@ -44,8 +43,7 @@ public class LockSettingActivity extends BaseActivity implements View.OnClickLis
     private CheckBox cbHidePattern;
     private CheckBox cbVibration;
 
-    private TextView tvAbout,
-            tvLockTime,
+    private TextView tvLockTime,
             tvChangePwd;
 
     private LockSettingReceiver mLockSettingReceiver;
@@ -67,7 +65,6 @@ public class LockSettingActivity extends BaseActivity implements View.OnClickLis
 
         tvChangePwd = findViewById(R.id.btn_change_pwd);
         tvLockTime = findViewById(R.id.lock_time);
-        tvAbout = findViewById(R.id.about_me);
 
         //
         mTopLayout = findViewById(R.id.top_layout);
@@ -104,8 +101,6 @@ public class LockSettingActivity extends BaseActivity implements View.OnClickLis
 
         tvLockTime.setOnClickListener(this);
         tvChangePwd.setOnClickListener(this);
-        tvAbout.setOnClickListener(this);
-
     }
 
     @Override
@@ -115,10 +110,6 @@ public class LockSettingActivity extends BaseActivity implements View.OnClickLis
                 Intent intent = new Intent(LockSettingActivity.this, GestureCreateActivity.class);
                 startActivityForResult(intent, REQUEST_CHANGE_PWD);
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                break;
-            case R.id.about_me:
-                intent = new Intent(LockSettingActivity.this, AboutMeActivity.class);
-                startActivity(intent);
                 break;
             case R.id.lock_when:
                 String title = SpUtil.getInstance().getString(AppConstants.LOCK_APART_TITLE, "");

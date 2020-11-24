@@ -292,19 +292,6 @@
         android:layout_marginRight="20dp"
         android:background="#DEDEDE"/>
 
-    <TextView
-        android:id="@+id/about_me"
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:background="@drawable/bg_white_clicked"
-        android:drawableRight="@drawable/arrow_more"
-        android:gravity="center_vertical"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:text="@string/about_me"
-        android:textColor="#2c2c2c"
-        android:textSize="14sp"/>
-
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"

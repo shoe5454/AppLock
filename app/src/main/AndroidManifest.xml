@@ -58,10 +58,6 @@
             android:label="Create a pattern lock"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activities.about.AboutMeActivity"
-            android:label="About me"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activities.main.MainActivity"
             android:screenOrientation="portrait"/>
 
