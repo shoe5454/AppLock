@@ -276,7 +276,7 @@ public class UnlockActivity extends BaseActivity {
                             }
                             dao.update(mCorrectAnswer);
                             new Handler(Looper.getMainLooper()).post(() -> {
-                                mLockInfoManager.unlockCommApplication(pkgName);
+                                //mLockInfoManager.unlockCommApplication(pkgName);
                                 finish();
                             });
                         });
