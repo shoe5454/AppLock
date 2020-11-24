@@ -97,6 +97,7 @@ public class LockService extends IntentService {
     }
 
     private void runForever() {
+        String justUnlockedPackageName = null;
 
         while (threadIsTerminate) {
             String packageName = getLauncherTopApp(LockService.this, activityManager);
@@ -157,7 +158,8 @@ public class LockService extends IntentService {
                         }
                     }
                 }
-                if (mLockInfoManager.isLockedPackageName(packageName)) {
+                if (mLockInfoManager.isLockedPackageName(packageName) && !packageName.equals(justUnlockedPackageName)) {
+                    justUnlockedPackageName = packageName;
                     passwordLock(packageName);
                     continue;
                 }
