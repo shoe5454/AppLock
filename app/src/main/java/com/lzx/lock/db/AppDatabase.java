@@ -71,14 +71,15 @@ public abstract class AppDatabase extends RoomDatabase {
     static final Migration MIGRATION_2_3 = new Migration(2, 3) {
         @Override
         public void migrate(SupportSQLiteDatabase db) {
-            /*insert(db, AnswerType.NOUN_IDENTIFICATION, AnswerSubtype.BODY_PART, R.drawable.question_head, "Head", false);
-            insert(db, AnswerType.NOUN_IDENTIFICATION, AnswerSubtype.RELATIONSHIP, R.drawable.question_my_mother, "My mother", false);
+            //insert(db, AnswerType.NOUN_IDENTIFICATION, AnswerSubtype.BODY_PART, R.drawable.question_head, "Head", false);
+            /*insert(db, AnswerType.NOUN_IDENTIFICATION, AnswerSubtype.RELATIONSHIP, R.drawable.question_my_mother, "My mother", false);
             insert(db, AnswerType.NOUN_IDENTIFICATION, AnswerSubtype.RELATIONSHIP, R.drawable.question_my_father, "My father", false);
             insert(db, AnswerType.NOUN_IDENTIFICATION, AnswerSubtype.RELATIONSHIP, R.drawable.question_my_brother, "My brother", false);
             insert(db, AnswerType.NOUN_IDENTIFICATION, AnswerSubtype.RELATIONSHIP, R.drawable.question_me, "Me", false);
             insert(db, AnswerType.NOUN_IDENTIFICATION, AnswerSubtype.RELATIONSHIP, R.drawable.question_my_grandmother1, "My grandmother", false);
             insert(db, AnswerType.NOUN_IDENTIFICATION, AnswerSubtype.RELATIONSHIP, R.drawable.question_my_grandmother2, "My grandmother", false);
             */
+            // ball
             // colors
             // tree
             // banana

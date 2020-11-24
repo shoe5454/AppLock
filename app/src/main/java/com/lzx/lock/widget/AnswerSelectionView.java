@@ -27,6 +27,8 @@ public class AnswerSelectionView extends LinearLayout {
 
     public AnswerSelectionView(Context context, AttributeSet set) {
         super(context, set);
+        this.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
+        this.setDividerDrawable(getResources().getDrawable(R.drawable.answer_button_divider));
     }
 
     public void setAnswers(List<Answer> answers) {
@@ -38,7 +40,7 @@ public class AnswerSelectionView extends LinearLayout {
             myButton.setText(answer.text);
             myButton.setTag(answer.uid);
             myButton.setTypeface(typeface);
-            myButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 28f);
+            myButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30f);
             myButton.setTransformationMethod(null);
             myButton.setOnClickListener(new OnClickListener() {
                 @Override
