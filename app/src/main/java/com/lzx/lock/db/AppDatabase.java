@@ -17,7 +17,7 @@ import com.lzx.lock.db.entities.Answer;
 import com.lzx.lock.db.entities.AnswerSubtype;
 import com.lzx.lock.db.entities.AnswerType;
 
-@Database(entities = {Answer.class}, version = 2)
+@Database(entities = {Answer.class}, version = 4)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract AnswerDao answerDao();
 
@@ -52,7 +52,7 @@ public abstract class AppDatabase extends RoomDatabase {
         insert(db, AnswerType.NOUN_IDENTIFICATION, AnswerSubtype.FOOD, R.drawable.question_pizza, "A pizza", false);
     }
 
-    static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+    static final Migration MIGRATION_2_3 = new Migration(2, 3) {
         @Override
         public void migrate(SupportSQLiteDatabase db) {
             insert(db, AnswerType.NOUN_IDENTIFICATION, AnswerSubtype.FOOD, R.drawable.question_cake, "A cake", false);
@@ -68,7 +68,7 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
-    static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+    static final Migration MIGRATION_3_4 = new Migration(3, 4) {
         @Override
         public void migrate(SupportSQLiteDatabase db) {
             insert(db, AnswerType.NOUN_IDENTIFICATION, AnswerSubtype.PERSON_DESCRIPTION, R.drawable.question_man, "A man", false);
@@ -81,7 +81,7 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
-    static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+    static final Migration MIGRATION_4_5 = new Migration(4, 5) {
         @Override
         public void migrate(SupportSQLiteDatabase db) {
             //insert(db, AnswerType.NOUN_IDENTIFICATION, AnswerSubtype.FRUIT, R.drawable.question_apple, "An apple", false);
@@ -126,7 +126,7 @@ public abstract class AppDatabase extends RoomDatabase {
         };
         return Room.databaseBuilder(applicationContext, AppDatabase.class, "reading-lock")
                 .addCallback(rdc)
-                .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                .addMigrations(MIGRATION_2_3, MIGRATION_3_4)
                 .build();
     }
 }
