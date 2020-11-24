@@ -31,8 +31,6 @@ public class SplashActivity extends BaseActivity {
     private static final int RESULT_ACTION_ACCESSIBILITY_SETTINGS = 3;
 
     private ImageView mImgSplash;
-    @Nullable
-    private ObjectAnimator animator;
 
     @Override
     public int getLayoutId() {
@@ -55,31 +53,22 @@ public class SplashActivity extends BaseActivity {
             BackgroundManager.getInstance().init(this).startService(LockService.class);
         }
 
-        animator = ObjectAnimator.ofFloat(mImgSplash, "alpha", 0.5f, 1);
-        animator.setDuration(1500);
-        animator.start();
-        animator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                boolean isFirstLock = SpUtil.getInstance().getBoolean(AppConstants.LOCK_IS_FIRST_LOCK, true);
-                if (isFirstLock) {
-                    showDialog();
-                } else {
+        boolean isFirstLock = SpUtil.getInstance().getBoolean(AppConstants.LOCK_IS_FIRST_LOCK, true);
+        if (isFirstLock) {
+            showDialog();
+        } else {
                     /*Intent intent = new Intent(SplashActivity.this, GestureSelfUnlockActivity.class);
                     intent.putExtra(AppConstants.LOCK_PACKAGE_NAME, AppConstants.APP_PACKAGE_NAME);
                     intent.putExtra(AppConstants.LOCK_FROM, AppConstants.LOCK_FROM_LOCK_MAIN_ACITVITY);
                     startActivity(intent);*/
-                    //finish();
-                    //overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                    finish();
+            //finish();
+            //overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+            startActivity(intent);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            finish();
 
-                }
-            }
-        });
+        }
     }
 
     private void showDialog() {
@@ -119,7 +108,7 @@ public class SplashActivity extends BaseActivity {
         }
     }
 
-    public boolean isAccessibilityEnabled() {
+    /*public boolean isAccessibilityEnabled() {
         int accessibilityEnabled = 0;
         final String ACCESSIBILITY_SERVICE = "io.github.subhamtyagi.privacyapplock/com.lzx.lock.service.LockAccessibilityService";
         try {
@@ -141,7 +130,7 @@ public class SplashActivity extends BaseActivity {
             }
         }
         return false;
-    }
+    }*/
 
     /*private void gotoCreatePwdActivity() {
         Intent intent2 = new Intent(SplashActivity.this, CreatePwdActivity.class);
@@ -163,9 +152,4 @@ public class SplashActivity extends BaseActivity {
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        animator = null;
-    }
 }

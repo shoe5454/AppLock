@@ -6,7 +6,6 @@ import android.content.Intent;
 
 import com.lzx.lock.base.AppConstants;
 import com.lzx.lock.services.BackgroundManager;
-import com.lzx.lock.services.LockAccessibilityService;
 import com.lzx.lock.services.LockService;
 import com.lzx.lock.utils.SpUtil;
 
