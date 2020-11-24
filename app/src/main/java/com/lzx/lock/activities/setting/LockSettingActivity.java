@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lzx.lock.R;
-import com.lzx.lock.activities.lock.GestureCreateActivity;
 import com.lzx.lock.base.AppConstants;
 import com.lzx.lock.base.BaseActivity;
 import com.lzx.lock.model.LockAutoTime;
@@ -23,7 +22,6 @@ import com.lzx.lock.services.BackgroundManager;
 import com.lzx.lock.services.LockService;
 import com.lzx.lock.utils.SpUtil;
 import com.lzx.lock.utils.SystemBarHelper;
-import com.lzx.lock.utils.ToastUtil;
 import com.lzx.lock.widget.SelectLockTimeDialog;
 
 
@@ -35,7 +33,6 @@ public class LockSettingActivity extends BaseActivity implements View.OnClickLis
         , DialogInterface.OnDismissListener, CompoundButton.OnCheckedChangeListener {
 
     public static final String ON_ITEM_CLICK_ACTION = "on_item_click_action";
-    private static final int REQUEST_CHANGE_PWD = 3;
 
     private CheckBox cbLockSwitch;
     private CheckBox cbLockScreen;
@@ -43,8 +40,7 @@ public class LockSettingActivity extends BaseActivity implements View.OnClickLis
     private CheckBox cbHidePattern;
     private CheckBox cbVibration;
 
-    private TextView tvLockTime,
-            tvChangePwd;
+    private TextView tvLockTime;
 
     private LockSettingReceiver mLockSettingReceiver;
     private SelectLockTimeDialog dialog;
@@ -63,7 +59,6 @@ public class LockSettingActivity extends BaseActivity implements View.OnClickLis
         cbHidePattern=findViewById(R.id.checkbox_show_hide_pattern);
         cbVibration=findViewById(R.id.checkbox_vibrate);
 
-        tvChangePwd = findViewById(R.id.btn_change_pwd);
         tvLockTime = findViewById(R.id.lock_time);
 
         //
@@ -100,17 +95,11 @@ public class LockSettingActivity extends BaseActivity implements View.OnClickLis
         cbVibration.setOnCheckedChangeListener(this);
 
         tvLockTime.setOnClickListener(this);
-        tvChangePwd.setOnClickListener(this);
     }
 
     @Override
     public void onClick(@NonNull View view) {
         switch (view.getId()) {
-            case R.id.btn_change_pwd:
-                Intent intent = new Intent(LockSettingActivity.this, GestureCreateActivity.class);
-                startActivityForResult(intent, REQUEST_CHANGE_PWD);
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                break;
             case R.id.lock_when:
                 String title = SpUtil.getInstance().getString(AppConstants.LOCK_APART_TITLE, "");
                 dialog.setTitle(title);
@@ -154,19 +143,6 @@ public class LockSettingActivity extends BaseActivity implements View.OnClickLis
         }
 
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case REQUEST_CHANGE_PWD:
-                    ToastUtil.showToast("Password reset succeeded");
-                    break;
-            }
-        }
-    }
-
 
     @Override
     public void onDismiss(DialogInterface dialogInterface) {
